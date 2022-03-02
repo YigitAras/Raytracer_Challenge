@@ -1,2 +1,6 @@
 .vscode
 build/
+out1.txt
+out2.txt
+test/test1.txt
+test/test2.txt

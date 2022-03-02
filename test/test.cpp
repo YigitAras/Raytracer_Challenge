@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "../include/geometry.hpp"
+#include "../include/canvas.hpp"
 
 
 
@@ -134,6 +135,66 @@ TEST_CASE("Can use Tuple for color operations", "[Color operations]"){
     Tuple res4 = Tuple::color(0.9,0.2,0.04);
     REQUIRE(res4 == c4*c5);
 
+}
+
+TEST_CASE("Canvas is initialized with color(0,0,0) for all elements", "[Canvas init]"){
+    Canvas img = Canvas(10,20);
+
+    for(int i=0; i<20;i++){
+        for(int j=0; j<10; j++){
+            REQUIRE(img[i][j] == Tuple::color(0,0,0));
+        }
+    }
+}
+
+TEST_CASE("Can update a value in IMG with indexing", "[IMG indexing]"){
+    Canvas img = Canvas(10,20);
+    Tuple c1 = Tuple::color(1,0,0);
+
+    img[2][3] = c1;
+    REQUIRE(img[2][3] == Tuple(1,0,0,0));
+}
+
+TEST_CASE("Writing to PPM file works for header part", "[PPM format write]"){
+    Canvas img = Canvas(5,3);
+    img.dummy_to_ppm("out1.txt");
+
+    std::ifstream test1("test1.txt");
+    std::ifstream out1("../out1.txt");
+
+    std::stringstream b1;
+    std::stringstream b2;
+
+    b1 << test1.rdbuf();
+    b2 << out1.rdbuf();
+
+    REQUIRE(b1.str() == b2.str());
+}
+
+TEST_CASE("Full write test for PPM files work", "[PPM write full]"){
+    Canvas img = Canvas(5,3);
+    Tuple c1 = Tuple::color(1.5,0,0);
+    Tuple c2 = Tuple::color(0,0.5,0);
+    Tuple c3 = Tuple::color(-0.5,0,1);
+    img[0][0] = c1;
+    img[1][2] = c2;
+    img[2][4] = c3;
+
+    img.to_ppm("out2.txt");
+
+    std::ifstream test2("test2.txt");
+    std::ifstream out2("../out2.txt");
+
+    std::stringstream b1;
+    std::stringstream b2;
+
+    b1 << test2.rdbuf();
+    b2 << out2.rdbuf();
+
+    std::cout << b1.str() << std::endl;
+    std::cout << b2.str() << std::endl;
+    REQUIRE(b1.str() == b2.str());
+    
 }
 
 /*

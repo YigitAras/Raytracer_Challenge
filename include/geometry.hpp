@@ -18,6 +18,7 @@ public:
     double w;
 
     Tuple(double x, double y, double z, double w);
+    Tuple();
 
     static Tuple point(double x, double y, double z);
     static Tuple vector(double x, double y, double z);

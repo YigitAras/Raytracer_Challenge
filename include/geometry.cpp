@@ -14,6 +14,7 @@ Tuple operator*(const double &lhs ,const Tuple &rhs) {
 
 // Tuple class related functions
 Tuple::Tuple(double x,double y,double z,double w):x(x),y(y),z(z),w(w){}
+Tuple::Tuple():x(0.0),y(0.0),z(0.0),w(0.0){}
 
 Tuple Tuple::point(double x,double y,double z){
     return Tuple(x,y,z,1.0);
