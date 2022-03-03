@@ -77,13 +77,16 @@ class Matrixf{
     std::array<std::array<double, 4>,4> arr;
 
     public:
+    static Matrixf ident(int);
     Matrixf(double [4][4]);
     Matrixf(double [3][3]);
     Matrixf(double [2][2]);
     std::array<std::array<double, 4>,4> getData();
     std::array<double,4>& operator[](int ind);
     bool operator==(Matrixf& rhs) const;
-    void print();
+    void print() const;
+    double det2x2(int ind1,int ind2) const;
+    Matrixf trans() const;
     Matrixf operator*(Matrixf& rhs) const;
 };
 

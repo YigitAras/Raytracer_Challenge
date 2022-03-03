@@ -156,6 +156,42 @@ Matrixf Matrixf::operator*(Matrixf& rhs) const {
     return Matrixf(res);
 }
 
+Matrixf Matrixf::ident(int size){
+    double res[4][4] = {0.0};
+    for(int i=0; i<size; i++) res[i][i] = 1.0;
+    return Matrixf(res);
+}
+
+Matrixf Matrixf::trans() const {
+    double res[4][4] = {0.0};
+    for(int i=0;i<4;i++){
+        for(int j=0;j<4;j++){
+            res[j][i] = this->arr[i][j];
+        }
+    }
+    return Matrixf(res);
+}
+
+void Matrixf::print() const{
+    std::cout<< "Here is the matrix: " << "\n";
+
+    for(int i=0;i<4;i++){
+        for(int j=0;j<4;j++){
+            std::cout << this->arr[i][j] << " ";
+        }
+        std::cout << "\n";
+    }
+}
+
 std::array<std::array<double, 4>,4> Matrixf::getData(){
     return this->arr;
+}
+
+double Matrixf::det2x2(int ind1, int ind2) const{
+    if(ind1 == 3 || ind2 == 3 || ind1<0 || ind2<0 ) {
+        std::cout << "Errenous indices provided to det2x2\n";
+        return -1; // just for now, will handle errors later maybe
+    }
+    return this->arr[ind1][ind2]*this->arr[ind1+1][ind2+1] -
+           this->arr[ind1][ind2+1]*this->arr[ind1+1][ind2];
 }

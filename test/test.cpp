@@ -261,6 +261,41 @@ TEST_CASE("Matrix multiplication works", "[Matrix multiplication]"){
     Matrixf matmul = mat4*mat5;
     REQUIRE((matmul==matres)); 
 }
+
+TEST_CASE("Identity matrix can be initialized", "[Identity matrix]"){
+    Matrixf identity = Matrixf::ident(4);
+    double res[4][4] = {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}};
+    Matrixf matres = Matrixf(res);
+
+    double m4[4][4] = {{1,2,3,4},{5,6,7,8},{9,8,7,6},{5,4,3,2}};
+    Matrixf mat4(m4);
+    Matrixf resmul = mat4*identity;
+    Matrixf resmul2 = identity*mat4;
+    REQUIRE((identity == matres));
+    REQUIRE((mat4 == resmul));
+    REQUIRE((resmul2 == mat4));
+}
+
+TEST_CASE("Matrix transpose works", "[Matrix transpose]"){
+    double m1[4][4] = {{0,9,3,0},{9,8,0,8},{1,8,5,3},{0,0,5,8}};
+    Matrixf mat1(m1);
+    double mt[4][4] = {{0,9,1,0},{9,8,8,0},{3,0,5,5},{0,8,3,8}};
+    Matrixf matt(mt);
+    Matrixf res = mat1.trans();
+
+    Matrixf id = Matrixf::ident(4);
+    Matrixf id_t = id.trans();
+    REQUIRE((res==matt));
+    REQUIRE((id_t == id));
+}
+
+TEST_CASE("2x2 Determinant works", "[Submatrix 4x4 determinant]"){
+    double m1[4][4] ={{1,5,0,0},{-3,2,0,0},{0,0,0,0},{0,0,0,0}};
+    Matrixf mat1(m1);
+
+    double res = mat1.det2x2(0,0);
+    REQUIRE(res==17);
+}
 /*
 
 SCENARIO( "vectors can be sized and resized", "[vector]" ) {
