@@ -105,3 +105,57 @@ Tuple Tuple::operator/(const double &rhs) const{
     res.w = this-> w / rhs;
     return res;
 }
+
+
+std::array<double,4>& Matrixf::operator[](int ind){
+    return this->arr[ind];
+}
+
+Matrixf::Matrixf(double x[4][4]){
+    for(int i=0;i<4;i++){
+        for(int j=0;j<4;j++){
+            this->arr[i][j] = x[i][j];
+        }
+    }
+}
+
+Matrixf::Matrixf(double x[3][3]){
+    for(int i=0;i<3;i++){
+        for(int j=0;j<3;j++){
+            this->arr[i][j] = x[i][j];
+        }
+    }
+}
+
+Matrixf::Matrixf(double x[2][2]){
+    for(int i=0;i<2;i++){
+        for(int j=0;j<2;j++){
+            this->arr[i][j] = x[i][j];
+        }
+    }
+}
+bool Matrixf::operator==(Matrixf& rhs) const {
+    bool res = true;
+    for (int i=0;i<4; i++){
+        for(int j=0; j<4; j++){
+            res &= double_cmp(this->arr[i][j], rhs[i][j]);
+        }
+    }
+    return res;
+}
+
+Matrixf Matrixf::operator*(Matrixf& rhs) const {
+    double res[4][4] = {0};
+    for(int i=0;i<4;i++){
+        for(int j=0;j<4;j++){
+            for(int k=0;k<4;k++){
+            res[i][j] += this->arr[i][k] * rhs[k][j];
+            }
+        }
+    }
+    return Matrixf(res);
+}
+
+std::array<std::array<double, 4>,4> Matrixf::getData(){
+    return this->arr;
+}

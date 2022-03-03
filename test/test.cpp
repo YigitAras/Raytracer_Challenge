@@ -197,6 +197,70 @@ TEST_CASE("Full write test for PPM files work", "[PPM write full]"){
     
 }
 
+TEST_CASE("Full write test for PPM files work, also with line endings", "[PPM write full with line end]"){
+    Canvas img = Canvas(10,2);
+    for(int i = 0; i< img.get_height(); i++){
+        for(int j = 0; j< img.get_width(); j++){
+            img[i][j] = Tuple::color(1,0.8,0.6);
+        }
+    }
+    img.to_ppm("out3.txt");
+    std::ifstream test3("test3.txt");
+    std::ifstream out3("../out3.txt");
+
+    std::stringstream b1;
+    std::stringstream b2;
+
+    b1 << test3.rdbuf();
+    b2 << out3.rdbuf();
+
+    std::cout << b1.str() << std::endl;
+    std::cout << b2.str() << std::endl;
+    REQUIRE(b1.str() == b2.str());
+}
+
+TEST_CASE("Matrix can be initialized properly", "[Matrix initialization]"){
+    double mat[4][4] = {{1.0,2.0,3.0,4.0},{5.5,6.5,7.5,8.5},{9.0,10.0,11.0,12.0},{13.5,14.5,15.5,16.5}};
+    Matrixf m1 = Matrixf(mat);
+
+    REQUIRE(m1[0][0] ==1.0); 
+    REQUIRE(m1[0][3] == 4.0);
+    REQUIRE(m1[1][0]== 5.5);
+    REQUIRE(m1[1][2] == 7.5);
+    REQUIRE(m1[2][2] == 11.0);
+    REQUIRE(m1[3][0] == 13.5);
+    REQUIRE(m1[3][2] == 15.5);
+}
+
+TEST_CASE("Can create sub matrix from 4x4 Matrix", "[Subarray creation]"){
+    double m4[4][4] = {{-3,5,0,1},{1,-2,-7,2},{0,1,1,3},{1,2,3,4}};
+    Matrixf mat = Matrixf(m4);
+    std::array<std::array<double,3>,3> m3 = SubArray<decltype(m3)>(mat,3);
+    std::array<std::array<double,3>,3> mm3 = {{{{-3,5,0}},{{1,-2,-7}},{{0,1,1}}}}; // what the actual fuck
+    REQUIRE(std::equal(m3.begin(),m3.end(),mm3.begin(),mm3.end()));
+}
+
+TEST_CASE("Can check equality of two matrices", "[Matrix equality]"){
+    double m4[4][4] = {{-3,5,0,1},{1,-2,-7,2},{0,1,1,3},{1,2,3,4}};
+    double m5[4][4] = {{-3,5,0,1},{1,-2,-3,3},{0,2,2,3},{1,2,3,4}};
+    Matrixf mat1 = Matrixf(m4);
+    Matrixf mat2 = Matrixf(m4);
+    Matrixf mat3 = Matrixf(m5);
+    REQUIRE((mat1 == mat2));
+    REQUIRE(!(mat3 == mat2));
+}
+
+TEST_CASE("Matrix multiplication works", "[Matrix multiplication]"){
+    double m4[4][4] = {{1,2,3,4},{5,6,7,8},{9,8,7,6},{5,4,3,2}};
+    double m5[4][4] = {{-2,1,2,3},{3,2,1,-1},{4,3,6,5},{1,2,7,8}};
+    double res[4][4] = {{20,22,50,48},{44,54,114,108},{40,58,110,102},{16,26,46,42}};
+
+    Matrixf mat4(m4);
+    Matrixf mat5(m5);
+    Matrixf matres(res);
+    Matrixf matmul = mat4*mat5;
+    REQUIRE((matmul==matres)); 
+}
 /*
 
 SCENARIO( "vectors can be sized and resized", "[vector]" ) {

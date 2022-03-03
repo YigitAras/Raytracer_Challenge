@@ -1,8 +1,27 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 #include <math.h>
+#include <algorithm>
+#include <array>
 #include <iostream>
 #define EPSILON 1.0e-5
+
+
+//USAGE:
+// std::array<int, 5> arr5 = SubArray<decltype(arr5)>(arr10, 5);
+template<typename X, typename Y>
+X SubArray(Y& src, const size_t size)
+{
+    // Probably should throw an error if the size param is bigger than the initial array
+    X dst;
+    for(int i=0;i<size;i++){
+    std::copy(src[i].begin(), src[i].begin() + size, dst[i].begin());
+    }
+
+    return dst;
+}
+
+
 
 inline bool double_cmp(double a, double b){
     return fabs(a-b) < EPSILON;
@@ -51,6 +70,21 @@ public:
     // friend functions
     friend std::ostream& operator<<(std::ostream& os, const Tuple& tp);
     friend Tuple operator*(const double &lhs ,const Tuple &rhs);
+};
+
+class Matrixf{
+    private:
+    std::array<std::array<double, 4>,4> arr;
+
+    public:
+    Matrixf(double [4][4]);
+    Matrixf(double [3][3]);
+    Matrixf(double [2][2]);
+    std::array<std::array<double, 4>,4> getData();
+    std::array<double,4>& operator[](int ind);
+    bool operator==(Matrixf& rhs) const;
+    void print();
+    Matrixf operator*(Matrixf& rhs) const;
 };
 
 #endif
