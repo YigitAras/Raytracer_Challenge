@@ -296,6 +296,18 @@ TEST_CASE("2x2 Determinant works", "[Submatrix 4x4 determinant]"){
     double res = mat1.det2x2(0,0);
     REQUIRE(res==17);
 }
+
+TEST_CASE("4x4 Determinant works", "[Determinat 4x4]"){
+    double m1[4][4] ={{-2,-8,3,5},{-3,1,7,3},{1,2,-9,6},{-6,7,7,-9}};
+    Matrixf mat1(m1);
+    double m2[4][4] ={{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}};
+    Matrixf mat2(m2);
+
+    double res = mat1.det();
+    double res2 = mat2.det();
+    REQUIRE(res==-4071);
+    REQUIRE(res2==1);
+}
 /*
 
 SCENARIO( "vectors can be sized and resized", "[vector]" ) {

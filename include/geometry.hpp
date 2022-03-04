@@ -85,9 +85,14 @@ class Matrixf{
     std::array<double,4>& operator[](int ind);
     bool operator==(Matrixf& rhs) const;
     void print() const;
-    double det2x2(int ind1,int ind2) const;
     Matrixf trans() const;
     Matrixf operator*(Matrixf& rhs) const;
+    double det() const;
+    double cofac_3x3_00() const;
+    double cofac_3x3_01() const;
+    double cofac_3x3_02() const;
+    double cofac_3x3_03() const;
+    double det2x2(int ind1,int ind2) const;
 };
 
 #endif

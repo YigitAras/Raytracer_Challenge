@@ -188,6 +188,7 @@ std::array<std::array<double, 4>,4> Matrixf::getData(){
 }
 
 double Matrixf::det2x2(int ind1, int ind2) const{
+
     if(ind1 == 3 || ind2 == 3 || ind1<0 || ind2<0 ) {
         std::cout << "Errenous indices provided to det2x2\n";
         return -1; // just for now, will handle errors later maybe
@@ -195,3 +196,39 @@ double Matrixf::det2x2(int ind1, int ind2) const{
     return this->arr[ind1][ind2]*this->arr[ind1+1][ind2+1] -
            this->arr[ind1][ind2+1]*this->arr[ind1+1][ind2];
 }
+
+double Matrixf::det() const{
+    // Simply take DET assuming it is a 4x4
+    // + cofac3x3(0,0)
+    // - cofac3x3(0,1)
+    // + cofac3x3(0,2)
+    // - cofac3x3(0,3)
+    
+    return this->arr[0][0] * cofac_3x3_00() -
+           this->arr[0][1] * cofac_3x3_01() +
+           this->arr[0][2] * cofac_3x3_02() -
+           this->arr[0][3] * cofac_3x3_03();    
+}
+
+inline double Matrixf::cofac_3x3_00() const {
+    return this->arr[1][1] * (this->arr[2][2]*this->arr[3][3] - this->arr[2][3]*this->arr[3][2]) -
+           this->arr[1][2] * (this->arr[2][1]*this->arr[3][3] - this->arr[3][1]*this->arr[2][3]) +
+           this->arr[1][3] * (this->arr[2][1]*this->arr[3][2] - this->arr[3][1]*this->arr[2][2]);
+}
+inline double Matrixf::cofac_3x3_01() const {
+    return this->arr[1][0] * (this->arr[2][2]*this->arr[3][3] - this->arr[2][3]*this->arr[3][2]) -
+           this->arr[1][2] * (this->arr[2][0]*this->arr[3][3] - this->arr[3][0]*this->arr[2][3]) +
+           this->arr[1][3] * (this->arr[2][0]*this->arr[3][2] - this->arr[3][0]*this->arr[2][2]);
+}
+inline double Matrixf::cofac_3x3_02() const {
+    return this->arr[1][0] * (this->arr[2][1]*this->arr[3][3] - this->arr[3][1]*this->arr[2][3]) -
+           this->arr[1][1] * (this->arr[2][0]*this->arr[3][3] - this->arr[3][0]*this->arr[2][3]) +
+           this->arr[1][3] * (this->arr[2][0]*this->arr[3][1] - this->arr[3][0]*this->arr[2][1]);
+}
+
+inline double Matrixf::cofac_3x3_03() const { 
+    return this->arr[1][0] * (this->arr[2][1]*this->arr[3][2] - this->arr[3][1]*this->arr[2][2]) -
+           this->arr[1][1] * (this->arr[2][0]*this->arr[3][2] - this->arr[3][0]*this->arr[2][2]) +
+           this->arr[1][2] * (this->arr[2][0]*this->arr[3][1] - this->arr[3][0]*this->arr[2][1]);
+}
+
