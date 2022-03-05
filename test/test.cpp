@@ -232,14 +232,6 @@ TEST_CASE("Matrix can be initialized properly", "[Matrix initialization]"){
     REQUIRE(m1[3][2] == 15.5);
 }
 
-TEST_CASE("Can create sub matrix from 4x4 Matrix", "[Subarray creation]"){
-    double m4[4][4] = {{-3,5,0,1},{1,-2,-7,2},{0,1,1,3},{1,2,3,4}};
-    Matrixf mat = Matrixf(m4);
-    std::array<std::array<double,3>,3> m3 = SubArray<decltype(m3)>(mat,3);
-    std::array<std::array<double,3>,3> mm3 = {{{{-3,5,0}},{{1,-2,-7}},{{0,1,1}}}}; // what the actual fuck
-    REQUIRE(std::equal(m3.begin(),m3.end(),mm3.begin(),mm3.end()));
-}
-
 TEST_CASE("Can check equality of two matrices", "[Matrix equality]"){
     double m4[4][4] = {{-3,5,0,1},{1,-2,-7,2},{0,1,1,3},{1,2,3,4}};
     double m5[4][4] = {{-3,5,0,1},{1,-2,-3,3},{0,2,2,3},{1,2,3,4}};
@@ -260,6 +252,15 @@ TEST_CASE("Matrix multiplication works", "[Matrix multiplication]"){
     Matrixf matres(res);
     Matrixf matmul = mat4*mat5;
     REQUIRE((matmul==matres)); 
+}
+
+TEST_CASE("Matrix-Tuple multiplication works", "[Matrix*Tuple]"){
+    double m1[4][4] = {{1,2,3,4},{2,4,4,2},{8,6,4,1},{0,0,0,1}};
+    Matrixf mat1(m1);
+    Tuple b = Tuple(1,2,3,1);
+    Tuple res = Tuple(18,24,33,1);
+    Tuple resmul = mat1*b;
+    REQUIRE((res == resmul));
 }
 
 TEST_CASE("Identity matrix can be initialized", "[Identity matrix]"){
@@ -289,14 +290,6 @@ TEST_CASE("Matrix transpose works", "[Matrix transpose]"){
     REQUIRE((id_t == id));
 }
 
-TEST_CASE("2x2 Determinant works", "[Submatrix 4x4 determinant]"){
-    double m1[4][4] ={{1,5,0,0},{-3,2,0,0},{0,0,0,0},{0,0,0,0}};
-    Matrixf mat1(m1);
-
-    double res = mat1.det2x2(0,0);
-    REQUIRE(res==17);
-}
-
 TEST_CASE("4x4 Determinant works", "[Determinat 4x4]"){
     double m1[4][4] ={{-2,-8,3,5},{-3,1,7,3},{1,2,-9,6},{-6,7,7,-9}};
     Matrixf mat1(m1);
@@ -308,6 +301,53 @@ TEST_CASE("4x4 Determinant works", "[Determinat 4x4]"){
     REQUIRE(res==-4071);
     REQUIRE(res2==1);
 }
+
+TEST_CASE("Can tell if matrix is invertible", "[Invertibility of Matrix]"){
+    double m1[4][4] ={{6,4,4,4},{5,5,7,6},{4,-9,3,-7},{9,1,7,-6}};
+    double m2[4][4] ={{-4,2,-2,-3},{9,6,2,6},{0,-5,1,-5},{0,0,0,0}};
+    Matrixf mat1 = Matrixf(m1);
+    Matrixf mat2 = Matrixf(m2);
+    double det1 = mat1.det();
+    double det2 = mat2.det();
+    REQUIRE(det1 != 0.0);
+    REQUIRE(det2 == 0.0);
+}
+TEST_CASE("Can invert a 4x4 matrix correctly", "[4x4 Matrix Inversion]"){
+    double m1[4][4] ={{-5,2,6,-8},{1,-5,1,8},{7,7,-6,-7},{1,-3,7,4}};
+    double mres[4][4] = {{0.21805 , 0.45113 , 0.24060 , -0.04511},{-0.80827 , -1.45677 , -0.44361 , 0.52068},{-0.07895 , -0.22368 , -0.05263 , 0.19737},{-0.52256 , -0.81391 , -0.30075 , 0.30639}};
+    Matrixf mat1(m1);
+    Matrixf matres(mres);
+    Matrixf matinv = mat1.inv();
+    REQUIRE((matinv == matres));
+
+    double m2[4][4] ={{8,-5,9,2},{7,5,6,1},{-6,0,9,6},{-3,0,-9,-4}};
+    double mres2[4][4] = {{-0.15385 , -0.15385 , -0.28205 , -0.53846},{-0.07692 , 0.12308 , 0.02564 , 0.03077},{0.35897 , 0.35897 , 0.43590 , 0.92308},{-0.69231 , -0.69231 , -0.76923 , -1.92308}};
+    Matrixf mat2(m2);
+    Matrixf matres2(mres2);
+    Matrixf matinv2 = mat2.inv();
+    REQUIRE((matinv2 == matres2));
+
+    double m3[4][4] ={{9 , 3 , 0 , 9},{-5 , -2 , -6 , -3},{-4 , 9 , 6 , 4},{-7 , 6 , 6 , 2}};
+    double mres3[4][4] = {{-0.04074 , -0.07778 , 0.14444 , -0.22222},{-0.07778 , 0.03333 , 0.36667 , -0.33333},{-0.02901 , -0.14630 , -0.10926 , 0.12963},{0.17778 , 0.06667 , -0.26667 , 0.33333}};
+    Matrixf mat3(m3);
+    Matrixf matres3(mres3);
+    Matrixf matinv3 = mat3.inv();
+    REQUIRE((matinv3 == matres3));
+}
+
+TEST_CASE("A*B=C ==> A = C*B_inv","[Multiply by inverse]"){
+    double a[4][4] = {{3 , -9 , 7 , 3},{3 , -8 , 2 , -9},{-4 , 4 , 4 , 1},{-6 , 5 , -1 , 1}};
+    double b[4][4] = {{8 , 2 , 2 , 2},{3 , -1 , 7 , 0},{7 , 0 , 5 , 4},{6 , -2 , 0 , 5}};
+
+    Matrixf A(a);
+    Matrixf B(b);
+    Matrixf C = A*B;
+    Matrixf B_inv = B.inv();
+    Matrixf res = C*B_inv;
+
+    REQUIRE((A==res));
+}
+
 /*
 
 SCENARIO( "vectors can be sized and resized", "[vector]" ) {

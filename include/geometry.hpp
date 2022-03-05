@@ -7,21 +7,6 @@
 #define EPSILON 1.0e-5
 
 
-//USAGE:
-// std::array<int, 5> arr5 = SubArray<decltype(arr5)>(arr10, 5);
-template<typename X, typename Y>
-X SubArray(Y& src, const size_t size)
-{
-    // Probably should throw an error if the size param is bigger than the initial array
-    X dst;
-    for(int i=0;i<size;i++){
-    std::copy(src[i].begin(), src[i].begin() + size, dst[i].begin());
-    }
-
-    return dst;
-}
-
-
 
 inline bool double_cmp(double a, double b){
     return fabs(a-b) < EPSILON;
@@ -87,12 +72,19 @@ class Matrixf{
     void print() const;
     Matrixf trans() const;
     Matrixf operator*(Matrixf& rhs) const;
+    Tuple operator*(Tuple& rhs) const;
     double det() const;
-    double cofac_3x3_00() const;
-    double cofac_3x3_01() const;
-    double cofac_3x3_02() const;
-    double cofac_3x3_03() const;
-    double det2x2(int ind1,int ind2) const;
+
+    double cofac_3x3(double data[3][3], int ind1, int ind2) const;
+    // Inline to speed things up
+    // Since Matrixf is just 4x4, can use these for inv
+    inline double cofac_3x3_00() const;
+    inline double cofac_3x3_01() const;
+    inline double cofac_3x3_02() const;
+    inline double cofac_3x3_03() const;
+
+    // MESA OpenGL implementation of 4x4 Matrix inversion
+    Matrixf inv() const;
 };
 
 #endif

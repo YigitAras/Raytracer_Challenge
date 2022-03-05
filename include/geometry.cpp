@@ -156,6 +156,18 @@ Matrixf Matrixf::operator*(Matrixf& rhs) const {
     return Matrixf(res);
 }
 
+Tuple Matrixf::operator*(Tuple& rhs) const {
+    Tuple res = Tuple(0,0,0,0);
+
+    res.x = rhs.x * this->arr[0][0]+ rhs.y *this->arr[0][1] + rhs.z * this->arr[0][2] + rhs.w * this->arr[0][3];
+    res.y = rhs.x * this->arr[1][0]+ rhs.y *this->arr[1][1] + rhs.z * this->arr[1][2] + rhs.w * this->arr[1][3];
+    res.z = rhs.x * this->arr[2][0]+ rhs.y *this->arr[2][1] + rhs.z * this->arr[2][2] + rhs.w * this->arr[2][3];
+    res.w = rhs.x * this->arr[3][0]+ rhs.y *this->arr[3][1] + rhs.z * this->arr[3][2] + rhs.w * this->arr[3][3];   
+
+    return res;
+}
+
+
 Matrixf Matrixf::ident(int size){
     double res[4][4] = {0.0};
     for(int i=0; i<size; i++) res[i][i] = 1.0;
@@ -187,16 +199,6 @@ std::array<std::array<double, 4>,4> Matrixf::getData(){
     return this->arr;
 }
 
-double Matrixf::det2x2(int ind1, int ind2) const{
-
-    if(ind1 == 3 || ind2 == 3 || ind1<0 || ind2<0 ) {
-        std::cout << "Errenous indices provided to det2x2\n";
-        return -1; // just for now, will handle errors later maybe
-    }
-    return this->arr[ind1][ind2]*this->arr[ind1+1][ind2+1] -
-           this->arr[ind1][ind2+1]*this->arr[ind1+1][ind2];
-}
-
 double Matrixf::det() const{
     // Simply take DET assuming it is a 4x4
     // + cofac3x3(0,0)
@@ -225,10 +227,51 @@ inline double Matrixf::cofac_3x3_02() const {
            this->arr[1][1] * (this->arr[2][0]*this->arr[3][3] - this->arr[3][0]*this->arr[2][3]) +
            this->arr[1][3] * (this->arr[2][0]*this->arr[3][1] - this->arr[3][0]*this->arr[2][1]);
 }
-
 inline double Matrixf::cofac_3x3_03() const { 
     return this->arr[1][0] * (this->arr[2][1]*this->arr[3][2] - this->arr[3][1]*this->arr[2][2]) -
            this->arr[1][1] * (this->arr[2][0]*this->arr[3][2] - this->arr[3][0]*this->arr[2][2]) +
            this->arr[1][2] * (this->arr[2][0]*this->arr[3][1] - this->arr[3][0]*this->arr[2][1]);
 }
 
+// Whole formula for the 4x4 case, inspired from MESA implementation of OpenGL function 
+Matrixf Matrixf::inv() const {
+    double res[4][4] = {0};
+    double det = 1/(this->det());
+    double A2323 = this->arr[2][2] * this->arr[3][3] - this->arr[2][3] * this->arr[3][2];
+    double A1323 = this->arr[2][1] * this->arr[3][3] - this->arr[2][3] * this->arr[3][1];
+    double A1223 = this->arr[2][1] * this->arr[3][2] - this->arr[2][2] * this->arr[3][1];
+    double A0323 = this->arr[2][0] * this->arr[3][3] - this->arr[2][3] * this->arr[3][0];
+    double A0223 = this->arr[2][0] * this->arr[3][2] - this->arr[2][2] * this->arr[3][0];
+    double A0123 = this->arr[2][0] * this->arr[3][1] - this->arr[2][1] * this->arr[3][0];
+    double A2313 = this->arr[1][2] * this->arr[3][3] - this->arr[1][3] * this->arr[3][2];
+    double A1313 = this->arr[1][1] * this->arr[3][3] - this->arr[1][3] * this->arr[3][1];
+    double A1213 = this->arr[1][1] * this->arr[3][2] - this->arr[1][2] * this->arr[3][1];
+    double A2312 = this->arr[1][2] * this->arr[2][3] - this->arr[1][3] * this->arr[2][2];
+    double A1312 = this->arr[1][1] * this->arr[2][3] - this->arr[1][3] * this->arr[2][1];
+    double A1212 = this->arr[1][1] * this->arr[2][2] - this->arr[1][2] * this->arr[2][1];
+    double A0313 = this->arr[1][0] * this->arr[3][3] - this->arr[1][3] * this->arr[3][0];
+    double A0213 = this->arr[1][0] * this->arr[3][2] - this->arr[1][2] * this->arr[3][0];
+    double A0312 = this->arr[1][0] * this->arr[2][3] - this->arr[1][3] * this->arr[2][0];
+    double A0212 = this->arr[1][0] * this->arr[2][2] - this->arr[1][2] * this->arr[2][0];
+    double A0113 = this->arr[1][0] * this->arr[3][1] - this->arr[1][1] * this->arr[3][0];
+    double A0112 = this->arr[1][0] * this->arr[2][1] - this->arr[1][1] * this->arr[2][0];
+
+    res[0][ 0] = det *   ( this->arr[1][ 1] * A2323 - this->arr[1][ 2] * A1323 + this->arr[1][ 3] * A1223 );
+    res[0][ 1] = det * - ( this->arr[0][ 1] * A2323 - this->arr[0][ 2] * A1323 + this->arr[0][ 3] * A1223 );
+    res[0][ 2] = det *   ( this->arr[0][ 1] * A2313 - this->arr[0][ 2] * A1313 + this->arr[0][ 3] * A1213 );
+    res[0][ 3] = det * - ( this->arr[0][ 1] * A2312 - this->arr[0][ 2] * A1312 + this->arr[0][ 3] * A1212 );
+    res[1][ 0] = det * - ( this->arr[1][ 0] * A2323 - this->arr[1][ 2] * A0323 + this->arr[1][ 3] * A0223 );
+    res[1][ 1] = det *   ( this->arr[0][ 0] * A2323 - this->arr[0][ 2] * A0323 + this->arr[0][ 3] * A0223 );
+    res[1][ 2] = det * - ( this->arr[0][ 0] * A2313 - this->arr[0][ 2] * A0313 + this->arr[0][ 3] * A0213 );
+    res[1][ 3] = det *   ( this->arr[0][ 0] * A2312 - this->arr[0][ 2] * A0312 + this->arr[0][ 3] * A0212 );
+    res[2][ 0] = det *   ( this->arr[1][ 0] * A1323 - this->arr[1][ 1] * A0323 + this->arr[1][ 3] * A0123 );
+    res[2][ 1] = det * - ( this->arr[0][ 0] * A1323 - this->arr[0][ 1] * A0323 + this->arr[0][ 3] * A0123 );
+    res[2][ 2] = det *   ( this->arr[0][ 0] * A1313 - this->arr[0][ 1] * A0313 + this->arr[0][ 3] * A0113 );
+    res[2][ 3] = det * - ( this->arr[0][ 0] * A1312 - this->arr[0][ 1] * A0312 + this->arr[0][ 3] * A0112 );
+    res[3][ 0] = det * - ( this->arr[1][ 0] * A1223 - this->arr[1][ 1] * A0223 + this->arr[1][ 2] * A0123 );
+    res[3][ 1] = det *   ( this->arr[0][ 0] * A1223 - this->arr[0][ 1] * A0223 + this->arr[0][ 2] * A0123 );
+    res[3][ 2] = det * - ( this->arr[0][ 0] * A1213 - this->arr[0][ 1] * A0213 + this->arr[0][ 2] * A0113 );
+    res[3][ 3] = det *   ( this->arr[0][ 0] * A1212 - this->arr[0][ 1] * A0212 + this->arr[0][ 2] * A0112 );
+
+    return Matrixf(res);
+}
