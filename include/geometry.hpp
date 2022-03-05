@@ -5,6 +5,7 @@
 #include <array>
 #include <iostream>
 #define EPSILON 1.0e-5
+#define M_PI           3.14159265358979323846
 
 
 
@@ -70,7 +71,7 @@ class Matrixf{
     std::array<double,4>& operator[](int ind);
     bool operator==(Matrixf& rhs) const;
     void print() const;
-    Matrixf trans() const;
+    Matrixf transpose() const;
     Matrixf operator*(Matrixf& rhs) const;
     Tuple operator*(Tuple& rhs) const;
     double det() const;
@@ -85,6 +86,14 @@ class Matrixf{
 
     // MESA OpenGL implementation of 4x4 Matrix inversion
     Matrixf inv() const;
+
+    // Transformation functions
+    static Matrixf translation(double,double,double);
+    static Matrixf scaling(double,double,double);
+    static Matrixf rotate_x(double);
+    static Matrixf rotate_y(double);
+    static Matrixf rotate_z(double);
+    static Matrixf shear(double,double,double,double,double,double);
 };
 
 #endif

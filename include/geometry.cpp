@@ -144,6 +144,8 @@ bool Matrixf::operator==(Matrixf& rhs) const {
     return res;
 }
 
+// Slower loop based
+/*
 Matrixf Matrixf::operator*(Matrixf& rhs) const {
     double res[4][4] = {0};
     for(int i=0;i<4;i++){
@@ -154,6 +156,29 @@ Matrixf Matrixf::operator*(Matrixf& rhs) const {
         }
     }
     return Matrixf(res);
+}
+*/
+
+// Faster unrolled, since size is fixed
+Matrixf Matrixf::operator*(Matrixf& rhs) const {
+    double dest[4][4] = {0};
+    dest[0][0] = this->arr[0][0] * rhs[0][0] + this->arr[0][1] * rhs[1][0] + this->arr[0][2] * rhs[2][0] + this->arr[0][3] * rhs[3][0]; 
+    dest[0][1] = this->arr[0][0] * rhs[0][1] + this->arr[0][1] * rhs[1][1] + this->arr[0][2] * rhs[2][1] + this->arr[0][3] * rhs[3][1]; 
+    dest[0][2] = this->arr[0][0] * rhs[0][2] + this->arr[0][1] * rhs[1][2] + this->arr[0][2] * rhs[2][2] + this->arr[0][3] * rhs[3][2]; 
+    dest[0][3] = this->arr[0][0] * rhs[0][3] + this->arr[0][1] * rhs[1][3] + this->arr[0][2] * rhs[2][3] + this->arr[0][3] * rhs[3][3]; 
+    dest[1][0] = this->arr[1][0] * rhs[0][0] + this->arr[1][1] * rhs[1][0] + this->arr[1][2] * rhs[2][0] + this->arr[1][3] * rhs[3][0]; 
+    dest[1][1] = this->arr[1][0] * rhs[0][1] + this->arr[1][1] * rhs[1][1] + this->arr[1][2] * rhs[2][1] + this->arr[1][3] * rhs[3][1]; 
+    dest[1][2] = this->arr[1][0] * rhs[0][2] + this->arr[1][1] * rhs[1][2] + this->arr[1][2] * rhs[2][2] + this->arr[1][3] * rhs[3][2]; 
+    dest[1][3] = this->arr[1][0] * rhs[0][3] + this->arr[1][1] * rhs[1][3] + this->arr[1][2] * rhs[2][3] + this->arr[1][3] * rhs[3][3]; 
+    dest[2][0] = this->arr[2][0] * rhs[0][0] + this->arr[2][1] * rhs[1][0] + this->arr[2][2] * rhs[2][0] + this->arr[2][3] * rhs[3][0]; 
+    dest[2][1] = this->arr[2][0] * rhs[0][1] + this->arr[2][1] * rhs[1][1] + this->arr[2][2] * rhs[2][1] + this->arr[2][3] * rhs[3][1]; 
+    dest[2][2] = this->arr[2][0] * rhs[0][2] + this->arr[2][1] * rhs[1][2] + this->arr[2][2] * rhs[2][2] + this->arr[2][3] * rhs[3][2]; 
+    dest[2][3] = this->arr[2][0] * rhs[0][3] + this->arr[2][1] * rhs[1][3] + this->arr[2][2] * rhs[2][3] + this->arr[2][3] * rhs[3][3]; 
+    dest[3][0] = this->arr[3][0] * rhs[0][0] + this->arr[3][1] * rhs[1][0] + this->arr[3][2] * rhs[2][0] + this->arr[3][3] * rhs[3][0]; 
+    dest[3][1] = this->arr[3][0] * rhs[0][1] + this->arr[3][1] * rhs[1][1] + this->arr[3][2] * rhs[2][1] + this->arr[3][3] * rhs[3][1]; 
+    dest[3][2] = this->arr[3][0] * rhs[0][2] + this->arr[3][1] * rhs[1][2] + this->arr[3][2] * rhs[2][2] + this->arr[3][3] * rhs[3][2]; 
+    dest[3][3] = this->arr[3][0] * rhs[0][3] + this->arr[3][1] * rhs[1][3] + this->arr[3][2] * rhs[2][3] + this->arr[3][3] * rhs[3][3];
+    return Matrixf(dest);
 }
 
 Tuple Matrixf::operator*(Tuple& rhs) const {
@@ -174,7 +199,7 @@ Matrixf Matrixf::ident(int size){
     return Matrixf(res);
 }
 
-Matrixf Matrixf::trans() const {
+Matrixf Matrixf::transpose() const {
     double res[4][4] = {0.0};
     for(int i=0;i<4;i++){
         for(int j=0;j<4;j++){
@@ -235,6 +260,8 @@ inline double Matrixf::cofac_3x3_03() const {
 
 // Whole formula for the 4x4 case, inspired from MESA implementation of OpenGL function 
 Matrixf Matrixf::inv() const {
+
+
     double res[4][4] = {0};
     double det = 1/(this->det());
     double A2323 = this->arr[2][2] * this->arr[3][3] - this->arr[2][3] * this->arr[3][2];
@@ -273,5 +300,78 @@ Matrixf Matrixf::inv() const {
     res[3][ 2] = det * - ( this->arr[0][ 0] * A1213 - this->arr[0][ 1] * A0213 + this->arr[0][ 2] * A0113 );
     res[3][ 3] = det *   ( this->arr[0][ 0] * A1212 - this->arr[0][ 1] * A0212 + this->arr[0][ 2] * A0112 );
 
+    return Matrixf(res);
+    
+}
+
+// Transformation related stuff
+Matrixf Matrixf::translation(double x,double y, double z){
+
+    double res[4][4] = {0};
+    res[0][0] = 1.0;
+    res[0][3] = x;
+    res[1][1] = 1.0;
+    res[1][3] = y;
+    res[2][2] = 1.0;
+    res[2][3] = z;
+    res[3][3] = 1.0;
+    return Matrixf(res);
+}
+
+Matrixf Matrixf::scaling(double x,double y,double z){
+    double res[4][4] = {0};
+    res[0][0] = x;
+    res[1][1] = y;
+    res[2][2] = z;
+    res[3][3] = 1;
+
+    return Matrixf(res);
+}
+
+Matrixf Matrixf::rotate_x(double deg){
+    double res[4][4] = {0};
+    res[0][0] = 1;
+    res[1][1] =  cos(deg);
+    res[1][2] = -sin(deg);
+    res[2][1] =  sin(deg);
+    res[2][2] =  cos(deg);
+    res[3][3] = 1;
+    return Matrixf(res);
+}
+
+Matrixf Matrixf::rotate_z(double deg){
+    double res[4][4] = {0};
+    res[0][0] = cos(deg);
+    res[0][1] = -sin(deg);
+    res[1][0] = sin(deg);
+    res[1][1] = cos(deg);
+    res[2][2] = 1;
+    res[3][3] = 1;
+    return Matrixf(res);
+}
+
+Matrixf Matrixf::rotate_y(double deg){
+    double res[4][4] = {0};
+    res[0][0] = cos(deg);
+    res[0][2] = sin(deg);
+    res[1][1] = 1;
+    res[3][3] = 1;
+    res[2][0] = -sin(deg);
+    res[2][2] = cos(deg);
+    return Matrixf(res);
+}
+
+Matrixf Matrixf::shear(double xy,double xz,double yx,double yz,double zx,double zy){
+    double res[4][4] = {0};
+    res[0][0] = 1;
+    res[0][1] = xy;
+    res[0][2] = xz;
+    res[1][1] = 1;
+    res[1][0] = yx;
+    res[1][2] = yz;
+    res[2][2] = 1;
+    res[2][0] = zx;
+    res[2][1] = zy;
+    res[3][3] = 1;
     return Matrixf(res);
 }

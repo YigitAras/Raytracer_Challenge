@@ -282,10 +282,10 @@ TEST_CASE("Matrix transpose works", "[Matrix transpose]"){
     Matrixf mat1(m1);
     double mt[4][4] = {{0,9,1,0},{9,8,8,0},{3,0,5,5},{0,8,3,8}};
     Matrixf matt(mt);
-    Matrixf res = mat1.trans();
+    Matrixf res = mat1.transpose();
 
     Matrixf id = Matrixf::ident(4);
-    Matrixf id_t = id.trans();
+    Matrixf id_t = id.transpose();
     REQUIRE((res==matt));
     REQUIRE((id_t == id));
 }
@@ -348,6 +348,116 @@ TEST_CASE("A*B=C ==> A = C*B_inv","[Multiply by inverse]"){
     REQUIRE((A==res));
 }
 
+TEST_CASE("Translation matrix works as intended", "[Translation matrix]"){
+    Matrixf transform = Matrixf::translation(5,-3,2);
+    Tuple ptr = Tuple::point(-3,4,5);
+    Tuple res = Tuple::point(2,1,7);
+    Tuple resmul = transform * ptr;
+    REQUIRE((resmul == res));
+
+    Tuple res2 = Tuple::point(-8,7,3);
+    Tuple resmul2 = transform.inv() * ptr;
+    REQUIRE((resmul2 == res2));
+
+    Tuple vec = Tuple::vector(-3,4,5);
+    Tuple vecres = transform * vec;
+    REQUIRE((vec == vecres));
+}
+
+TEST_CASE("Scaling matrix works as intended", "[Scaling matrix]"){
+    Matrixf transform = Matrixf::scaling(2,3,4);
+    Tuple ptr = Tuple::point(-4,6,8);
+    Tuple res1 = Tuple::point(-8,18,32);
+    Tuple ressca = transform * ptr;
+    
+    Tuple vec = Tuple::vector(-4,6,8);
+    Tuple res2 = Tuple::vector(-8,18,32);
+    Tuple ressca2 = transform * vec;
+    
+    Tuple res3 = Tuple::vector(-2,2,2);
+    Tuple ressca3 =  transform.inv() * vec;
+
+    // reflection
+    Matrixf transform2 = Matrixf::scaling(-1,1,1);
+    Tuple pt2 = Tuple::point(2,3,4);
+    Tuple res4 = Tuple::point(-2,3,4);
+    Tuple ressca4 = transform2 * pt2;
+    
+    REQUIRE((ressca == res1));
+    REQUIRE((ressca2 == res2));
+    REQUIRE((ressca3 == res3));
+    REQUIRE((ressca4 == res4));
+}
+
+TEST_CASE("Rotation around X works (Left Handed)", "[Rotate X]"){
+    Tuple pt = Tuple::point(0,1,0);
+    Matrixf half_q = Matrixf::rotate_x(M_PI/4);
+    Matrixf inv_half_q = half_q.inv();
+    Tuple res = Tuple::point(0, sqrt(2)/2, -sqrt(2)/2);
+    Tuple matres = inv_half_q * pt;
+    REQUIRE((matres==res)); 
+}
+
+TEST_CASE("Rotation around Y works (Left Handed)", "[Rotate Y]"){
+    Tuple pt = Tuple::point(0,0,1);
+    Matrixf half_q = Matrixf::rotate_y(M_PI/4);
+    Matrixf full_q = Matrixf::rotate_y(M_PI/2);
+    Tuple res = Tuple::point(sqrt(2)/2, 0, sqrt(2)/2);
+    Tuple matres = half_q * pt;
+    Tuple matres2 = full_q * pt;
+    Tuple pt2 = Tuple::point(1,0,0);
+    REQUIRE((res==matres));
+    REQUIRE((matres2==pt2));
+    
+}
+
+
+TEST_CASE("Rotation around Z works (Left Handed)", "[Rotate Z]"){
+    Tuple pt = Tuple::point(0,1,0);
+    Matrixf half_q = Matrixf::rotate_z(M_PI/4);
+    Matrixf full_q = Matrixf::rotate_z(M_PI/2);
+    Tuple res = Tuple::point(-sqrt(2)/2, sqrt(2)/2, 0);
+    Tuple matres = half_q * pt;
+    Tuple matres2 = full_q * pt;
+    Tuple pt2 = Tuple::point(-1,0,0);
+    REQUIRE((res==matres));
+    REQUIRE((matres2==pt2));
+    
+}
+
+TEST_CASE("Shear matrix works as intended", "[Shear matrix]") {
+    Matrixf sh1 = Matrixf::shear(0,1,0,0,0,0);
+    Tuple pt1 = Tuple::point(2,3,4);
+    Tuple res1 = Tuple::point(6,3,4);
+    Tuple matres1 = sh1 * pt1;
+
+
+    Matrixf sh2 = Matrixf::shear(0,0,1,0,0,0);
+    Tuple pt2 = Tuple::point(2,3,4);
+    Tuple res2 = Tuple::point(2,5,4);
+    Tuple matres2 = sh2 * pt2;
+
+    Matrixf sh3 = Matrixf::shear(0,0,0,1,0,0);
+    Tuple pt3 = Tuple::point(2,3,4);
+    Tuple res3 = Tuple::point(2,7,4);
+    Tuple matres3 = sh3 * pt3;
+
+    Matrixf sh4 = Matrixf::shear(0,0,0,0,1,0);
+    Tuple pt4 = Tuple::point(2,3,4);
+    Tuple res4 = Tuple::point(2,3,6);
+    Tuple matres4 = sh4 * pt4;
+
+    Matrixf sh5 = Matrixf::shear(0,0,0,0,0,1);
+    Tuple pt5 = Tuple::point(2,3,4);
+    Tuple res5 = Tuple::point(2,3,7);
+    Tuple matres = sh5 * pt5;
+
+    REQUIRE((res1 == matres1));
+    REQUIRE((res2 == matres2));
+    REQUIRE((res3 == matres3));
+    REQUIRE((res4 == matres4));
+    REQUIRE((res5 == matres));
+}
 /*
 
 SCENARIO( "vectors can be sized and resized", "[vector]" ) {
