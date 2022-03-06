@@ -391,7 +391,7 @@ TEST_CASE("Scaling matrix works as intended", "[Scaling matrix]"){
 
 TEST_CASE("Rotation around X works (Left Handed)", "[Rotate X]"){
     Tuple pt = Tuple::point(0,1,0);
-    Matrixf half_q = Matrixf::rotate_x(M_PI/4);
+    Matrixf half_q = Matrixf::rotation_x(M_PI/4);
     Matrixf inv_half_q = half_q.inv();
     Tuple res = Tuple::point(0, sqrt(2)/2, -sqrt(2)/2);
     Tuple matres = inv_half_q * pt;
@@ -400,8 +400,8 @@ TEST_CASE("Rotation around X works (Left Handed)", "[Rotate X]"){
 
 TEST_CASE("Rotation around Y works (Left Handed)", "[Rotate Y]"){
     Tuple pt = Tuple::point(0,0,1);
-    Matrixf half_q = Matrixf::rotate_y(M_PI/4);
-    Matrixf full_q = Matrixf::rotate_y(M_PI/2);
+    Matrixf half_q = Matrixf::rotation_y(M_PI/4);
+    Matrixf full_q = Matrixf::rotation_y(M_PI/2);
     Tuple res = Tuple::point(sqrt(2)/2, 0, sqrt(2)/2);
     Tuple matres = half_q * pt;
     Tuple matres2 = full_q * pt;
@@ -414,8 +414,8 @@ TEST_CASE("Rotation around Y works (Left Handed)", "[Rotate Y]"){
 
 TEST_CASE("Rotation around Z works (Left Handed)", "[Rotate Z]"){
     Tuple pt = Tuple::point(0,1,0);
-    Matrixf half_q = Matrixf::rotate_z(M_PI/4);
-    Matrixf full_q = Matrixf::rotate_z(M_PI/2);
+    Matrixf half_q = Matrixf::rotation_z(M_PI/4);
+    Matrixf full_q = Matrixf::rotation_z(M_PI/2);
     Tuple res = Tuple::point(-sqrt(2)/2, sqrt(2)/2, 0);
     Tuple matres = half_q * pt;
     Tuple matres2 = full_q * pt;
@@ -426,28 +426,28 @@ TEST_CASE("Rotation around Z works (Left Handed)", "[Rotate Z]"){
 }
 
 TEST_CASE("Shear matrix works as intended", "[Shear matrix]") {
-    Matrixf sh1 = Matrixf::shear(0,1,0,0,0,0);
+    Matrixf sh1 = Matrixf::shearing(0,1,0,0,0,0);
     Tuple pt1 = Tuple::point(2,3,4);
     Tuple res1 = Tuple::point(6,3,4);
     Tuple matres1 = sh1 * pt1;
 
 
-    Matrixf sh2 = Matrixf::shear(0,0,1,0,0,0);
+    Matrixf sh2 = Matrixf::shearing(0,0,1,0,0,0);
     Tuple pt2 = Tuple::point(2,3,4);
     Tuple res2 = Tuple::point(2,5,4);
     Tuple matres2 = sh2 * pt2;
 
-    Matrixf sh3 = Matrixf::shear(0,0,0,1,0,0);
+    Matrixf sh3 = Matrixf::shearing(0,0,0,1,0,0);
     Tuple pt3 = Tuple::point(2,3,4);
     Tuple res3 = Tuple::point(2,7,4);
     Tuple matres3 = sh3 * pt3;
 
-    Matrixf sh4 = Matrixf::shear(0,0,0,0,1,0);
+    Matrixf sh4 = Matrixf::shearing(0,0,0,0,1,0);
     Tuple pt4 = Tuple::point(2,3,4);
     Tuple res4 = Tuple::point(2,3,6);
     Tuple matres4 = sh4 * pt4;
 
-    Matrixf sh5 = Matrixf::shear(0,0,0,0,0,1);
+    Matrixf sh5 = Matrixf::shearing(0,0,0,0,0,1);
     Tuple pt5 = Tuple::point(2,3,4);
     Tuple res5 = Tuple::point(2,3,7);
     Tuple matres = sh5 * pt5;
@@ -457,6 +457,18 @@ TEST_CASE("Shear matrix works as intended", "[Shear matrix]") {
     REQUIRE((res3 == matres3));
     REQUIRE((res4 == matres4));
     REQUIRE((res5 == matres));
+}
+
+TEST_CASE("Transformation API calls working as intended", "[Fleunt API]"){
+    Matrixf transform = Matrixf::ident(4).
+                        rotate_x(M_PI/2).
+                        scale(5,5,5).
+                        translate(10,5,7);
+
+    Tuple point = Tuple::point(1,0,1);
+    Tuple res = Tuple::point(15,0,7);
+    Tuple mulres = transform*point;
+    REQUIRE((mulres == res));
 }
 /*
 

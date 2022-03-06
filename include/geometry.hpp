@@ -90,10 +90,19 @@ class Matrixf{
     // Transformation functions
     static Matrixf translation(double,double,double);
     static Matrixf scaling(double,double,double);
-    static Matrixf rotate_x(double);
-    static Matrixf rotate_y(double);
-    static Matrixf rotate_z(double);
-    static Matrixf shear(double,double,double,double,double,double);
+    static Matrixf rotation_x(double);
+    static Matrixf rotation_y(double);
+    static Matrixf rotation_z(double);
+    static Matrixf shearing(double,double,double,double,double,double);
+
+
+    // Easier to use API calls for modifying a Matrixf object
+    Matrixf translate(double,double,double);
+    Matrixf scale(double,double,double);
+    Matrixf rotate_x(double);
+    Matrixf rotate_y(double);
+    Matrixf rotate_z(double);
+    Matrixf shear(double,double,double,double,double,double);
 };
 
 #endif

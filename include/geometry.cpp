@@ -328,7 +328,7 @@ Matrixf Matrixf::scaling(double x,double y,double z){
     return Matrixf(res);
 }
 
-Matrixf Matrixf::rotate_x(double deg){
+Matrixf Matrixf::rotation_x(double deg){
     double res[4][4] = {0};
     res[0][0] = 1;
     res[1][1] =  cos(deg);
@@ -339,7 +339,7 @@ Matrixf Matrixf::rotate_x(double deg){
     return Matrixf(res);
 }
 
-Matrixf Matrixf::rotate_z(double deg){
+Matrixf Matrixf::rotation_z(double deg){
     double res[4][4] = {0};
     res[0][0] = cos(deg);
     res[0][1] = -sin(deg);
@@ -350,7 +350,7 @@ Matrixf Matrixf::rotate_z(double deg){
     return Matrixf(res);
 }
 
-Matrixf Matrixf::rotate_y(double deg){
+Matrixf Matrixf::rotation_y(double deg){
     double res[4][4] = {0};
     res[0][0] = cos(deg);
     res[0][2] = sin(deg);
@@ -361,7 +361,7 @@ Matrixf Matrixf::rotate_y(double deg){
     return Matrixf(res);
 }
 
-Matrixf Matrixf::shear(double xy,double xz,double yx,double yz,double zx,double zy){
+Matrixf Matrixf::shearing(double xy,double xz,double yx,double yz,double zx,double zy){
     double res[4][4] = {0};
     res[0][0] = 1;
     res[0][1] = xy;
@@ -374,4 +374,35 @@ Matrixf Matrixf::shear(double xy,double xz,double yx,double yz,double zx,double 
     res[2][1] = zy;
     res[3][3] = 1;
     return Matrixf(res);
+}
+
+
+Matrixf Matrixf::translate(double x,double y,double z){
+    *this =  translation(x,y,z) * (*this);
+    return *this;
+}
+
+Matrixf Matrixf::scale(double x,double y,double z){
+    *this =  scaling(x,y,z) * (*this);
+    return *this;
+}
+
+Matrixf Matrixf::rotate_x(double deg){
+    *this =  rotation_x(deg) * (*this);
+    return *this;
+}
+
+Matrixf Matrixf::rotate_y(double deg){
+    *this =  rotation_y(deg) * (*this);
+    return *this;
+}
+
+Matrixf Matrixf::rotate_z(double deg){
+    *this =  rotation_z(deg) * (*this);
+    return *this;
+}
+
+Matrixf Matrixf::shear(double xy,double xz,double yx,double yz,double zx,double zy){
+    *this =  shearing(xy, xz, yx, yz, zx, zy) * (*this);
+    return *this;
 }
