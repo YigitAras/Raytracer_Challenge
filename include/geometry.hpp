@@ -5,7 +5,7 @@
 #include <array>
 #include <iostream>
 #define EPSILON 1.0e-5
-#define M_PI           3.14159265358979323846
+#define M_PI 3.14159265358979323846
 
 
 
@@ -104,5 +104,18 @@ class Matrixf{
     Matrixf rotate_z(double);
     Matrixf shear(double,double,double,double,double,double);
 };
+
+class Ray{
+    private:
+    Tuple origin;
+    Tuple direction;
+    
+    public:
+    Ray(Tuple ori, Tuple dir);
+    Tuple get_origin();
+    Tuple get_direction();
+    Tuple pos(double);
+};
+
 
 #endif

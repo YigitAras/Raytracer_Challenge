@@ -1,6 +1,8 @@
 #include "geometry.hpp"
 
 
+// TUPLE METHODS
+
 // ostream overload for printing
 std::ostream& operator<<(std::ostream& os, const Tuple& tp){
     os << "Tuple: " << tp.x << " " << tp.y << " " << tp.z << " " << tp.w;
@@ -105,6 +107,9 @@ Tuple Tuple::operator/(const double &rhs) const{
     res.w = this-> w / rhs;
     return res;
 }
+
+
+// MATRIX METHODS BELOW
 
 
 std::array<double,4>& Matrixf::operator[](int ind){
@@ -261,7 +266,6 @@ inline double Matrixf::cofac_3x3_03() const {
 // Whole formula for the 4x4 case, inspired from MESA implementation of OpenGL function 
 Matrixf Matrixf::inv() const {
 
-
     double res[4][4] = {0};
     double det = 1/(this->det());
     double A2323 = this->arr[2][2] * this->arr[3][3] - this->arr[2][3] * this->arr[3][2];
@@ -405,4 +409,22 @@ Matrixf Matrixf::rotate_z(double deg){
 Matrixf Matrixf::shear(double xy,double xz,double yx,double yz,double zx,double zy){
     *this =  shearing(xy, xz, yx, yz, zx, zy) * (*this);
     return *this;
+}
+
+
+// RAY METHODS BELOW
+
+Ray::Ray(Tuple ori, Tuple dir) : origin(ori),direction(dir){}
+
+Tuple Ray::get_direction(){
+    return this->direction;
+}
+
+Tuple Ray::get_origin(){
+
+    return this->origin;
+}
+
+Tuple Ray::pos(double t){
+    return this->origin + t * this->direction;
 }

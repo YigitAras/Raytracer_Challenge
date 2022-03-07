@@ -470,6 +470,31 @@ TEST_CASE("Transformation API calls working as intended", "[Fleunt API]"){
     Tuple mulres = transform*point;
     REQUIRE((mulres == res));
 }
+
+TEST_CASE("Can instantiate a Ray and its values are correct","[Ray Initialization]"){
+    Tuple origin = Tuple::point(1,2,3);
+    Tuple direction = Tuple::vector(4,5,6);
+
+    Ray r1 = Ray(origin,direction);
+    REQUIRE((r1.get_direction() == direction));
+    REQUIRE((r1.get_origin() == origin));
+}
+
+TEST_CASE("Can query a position at time T from a Ray","[Ray Pos at T]"){
+    Tuple origin = Tuple::point(2,3,4);
+    Tuple direction = Tuple::vector(1,0,0);
+    Ray  r1 = Ray(origin,direction);
+    Tuple p1 = Tuple::point(2,3,4);
+    Tuple p2 = Tuple::point(3,3,4);
+    Tuple p3 = Tuple::point(1,3,4);
+    Tuple p4 = Tuple::point(4.5,3,4);
+
+    REQUIRE((p1 == r1.pos(0)));
+    REQUIRE((p2 == r1.pos(1)));
+    REQUIRE((p3 == r1.pos(-1)));
+    REQUIRE((p4 == r1.pos(2.5)));
+
+}
 /*
 
 SCENARIO( "vectors can be sized and resized", "[vector]" ) {
