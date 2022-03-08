@@ -495,6 +495,18 @@ TEST_CASE("Can query a position at time T from a Ray","[Ray Pos at T]"){
     REQUIRE((p4 == r1.pos(2.5)));
 
 }
+
+TEST_CASE("Intersection between a ray and a sphere works", "[Ray | Sphere]"){
+    Ray r1 = Ray(Tuple::point(0,0,-5),Tuple::vector(0,0,1));
+    // No idea why it does not work
+    Sphere s = Sphere();
+    
+    std::array<double,2> res1 = s.intersect(r1);
+
+    REQUIRE(4.0==res1[0]);
+    REQUIRE(6.0==res1[1]);
+}
+
 /*
 
 SCENARIO( "vectors can be sized and resized", "[vector]" ) {

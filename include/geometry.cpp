@@ -428,3 +428,30 @@ Tuple Ray::get_origin(){
 Tuple Ray::pos(double t){
     return this->origin + t * this->direction;
 }
+
+std::array<double,2> Sphere::intersect(Ray ray){
+    
+    std::array<double,2> res = { { std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity()} };  // weird init for std::array
+
+    Tuple sphere_to_ray =  ray.get_origin() - Tuple::point(0,0,0);
+    double a = ray.get_direction().dot(ray.get_direction());
+    double b = 2 * ray.get_direction().dot(sphere_to_ray);
+    double c = sphere_to_ray.dot(sphere_to_ray) - 1;
+    double discrim = b*b - 4 * a * c;
+    
+    // if discrim smaller than 0 no intersection hence two infinities are returned
+    if ( discrim < 0 ) return res;
+
+    res[0] = (-b - sqrt(discrim)) / (2*a);
+    res[1] = (-b + sqrt(discrim)) / (2*a);
+
+    return res;
+}
+
+Tuple Sphere::get_origin(){
+    return this->origin;
+}
+Tuple Obj3D::get_origin(){
+    return this->origin;
+}
+

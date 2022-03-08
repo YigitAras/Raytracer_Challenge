@@ -6,14 +6,13 @@
 #include <iostream>
 #define EPSILON 1.0e-5
 #define M_PI 3.14159265358979323846
+#include <limits>
 
 
 
 inline bool double_cmp(double a, double b){
     return fabs(a-b) < EPSILON;
 }
-
-
 
 class Tuple{
 public:
@@ -117,5 +116,22 @@ class Ray{
     Tuple pos(double);
 };
 
+class Obj3D {
+    protected:
+    Tuple origin = Tuple::vector(0,0,0);
+    public:
+    virtual std::array<double,2> intersect(Ray ray)=0;
+    virtual Tuple get_origin();
+};
+
+class Sphere : protected Obj3D {
+    private:
+    double r=1; // for now initialize it as unit sphere
+
+    public:
+    std::array<double,2> intersect(Ray ray);
+    Tuple get_origin();
+
+};
 
 #endif
