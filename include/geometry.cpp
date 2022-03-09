@@ -429,6 +429,12 @@ Tuple Ray::pos(double t){
     return this->origin + t * this->direction;
 }
 
+std::array<double,2> Obj3D::intersect(Ray ray){
+    std::array<double,2> res = { { std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity()} };  // weird init for std::array
+    // for now nothing, will implement later a generalized way
+    return res;
+}
+
 std::array<double,2> Sphere::intersect(Ray ray){
     
     std::array<double,2> res = { { std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity()} };  // weird init for std::array
@@ -454,4 +460,10 @@ Tuple Sphere::get_origin(){
 Tuple Obj3D::get_origin(){
     return this->origin;
 }
+
+Intersection& Intersections::operator[](int ind){
+    return this->arr[ind];
+}
+
+
 

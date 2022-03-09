@@ -498,13 +498,34 @@ TEST_CASE("Can query a position at time T from a Ray","[Ray Pos at T]"){
 
 TEST_CASE("Intersection between a ray and a sphere works", "[Ray | Sphere]"){
     Ray r1 = Ray(Tuple::point(0,0,-5),Tuple::vector(0,0,1));
+    Ray r2 = Ray(Tuple::point(0,1,-5),Tuple::vector(0,0,1));
+    Ray r3 = Ray(Tuple::point(0,2,-5),Tuple::vector(0,0,1));
+    Ray r4 = Ray(Tuple::point(0,0,0),Tuple::vector(0,0,1));
+    Ray r5 = Ray(Tuple::point(0,0,5),Tuple::vector(0,0,1));
     // No idea why it does not work
     Sphere s = Sphere();
     
+    
     std::array<double,2> res1 = s.intersect(r1);
+    std::array<double,2> res2 = s.intersect(r2);
+    std::array<double,2> res3 = s.intersect(r3);
+    std::array<double,2> res4 = s.intersect(r4);
+    std::array<double,2> res5 = s.intersect(r5);
 
     REQUIRE(4.0==res1[0]);
     REQUIRE(6.0==res1[1]);
+    REQUIRE(5.0==res2[0]);
+    REQUIRE(5.0==res2[1]);
+    REQUIRE(std::numeric_limits<double>::infinity()==res3[0]);
+    REQUIRE(std::numeric_limits<double>::infinity()==res3[1]);
+    REQUIRE(-1.0==res4[0]);
+    REQUIRE(1.0==res4[1]);
+    REQUIRE(-6.0==res5[0]);
+    REQUIRE(-4.0==res5[1]);
+}
+
+TEST_CASE("Variadic length Intersections class can be initialized and accessed","[Variadic Intersections class]"){
+    
 }
 
 /*

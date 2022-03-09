@@ -7,6 +7,8 @@
 #define EPSILON 1.0e-5
 #define M_PI 3.14159265358979323846
 #include <limits>
+#include <vector>
+#include <initializer_list>
 
 
 
@@ -120,7 +122,7 @@ class Obj3D {
     protected:
     Tuple origin = Tuple::vector(0,0,0);
     public:
-    virtual std::array<double,2> intersect(Ray ray)=0;
+    virtual std::array<double,2> intersect(Ray ray);
     virtual Tuple get_origin();
 };
 
@@ -132,6 +134,20 @@ class Sphere : protected Obj3D {
     std::array<double,2> intersect(Ray ray);
     Tuple get_origin();
 
+};
+
+class Intersection {
+    public:
+    Obj3D object;
+    double t;
+};
+
+class Intersections {
+    public:
+    std::vector<Intersection> arr;
+    size_t count;
+    Intersection& operator[](int ind);
+    Intersections(std::initializer_list<Intersection> l) : arr(l),count(l.size()) {}
 };
 
 #endif
