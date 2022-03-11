@@ -1,6 +1,7 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 #include <math.h>
+#include <memory>
 #include <algorithm>
 #include <array>
 #include <iostream>
@@ -10,7 +11,9 @@
 #include <vector>
 #include <initializer_list>
 
-
+// forward decleration?
+class Obj3D;
+class Intersections;
 
 inline bool double_cmp(double a, double b){
     return fabs(a-b) < EPSILON;
@@ -119,27 +122,20 @@ class Ray{
 };
 
 class Obj3D {
-    protected:
+    public:
     Tuple origin = Tuple::vector(0,0,0);
-    public:
-    virtual std::array<double,2> intersect(Ray ray);
+    Intersections intersect(Ray ray);
     virtual Tuple get_origin();
-};
-
-class Sphere : protected Obj3D {
-    private:
-    double r=1; // for now initialize it as unit sphere
-
-    public:
-    std::array<double,2> intersect(Ray ray);
-    Tuple get_origin();
-
 };
 
 class Intersection {
     public:
-    Obj3D object;
+    Obj3D* object;
     double t;
+    Intersection(double,Obj3D*);
+    ~Intersection(){
+        delete object;
+    }
 };
 
 class Intersections {
@@ -147,7 +143,20 @@ class Intersections {
     std::vector<Intersection> arr;
     size_t count;
     Intersection& operator[](int ind);
-    Intersections(std::initializer_list<Intersection> l) : arr(l),count(l.size()) {}
+    Intersections(std::vector<Intersection> l);
 };
+
+class Sphere : public Obj3D {
+    private:
+    double r=1; // for now initialize it as unit sphere
+
+    public:
+    Intersections intersect(Ray ray);
+    Tuple get_origin();
+
+};
+
+
+
 
 #endif

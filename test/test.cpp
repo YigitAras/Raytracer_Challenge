@@ -506,26 +506,35 @@ TEST_CASE("Intersection between a ray and a sphere works", "[Ray | Sphere]"){
     Sphere s = Sphere();
     
     
-    std::array<double,2> res1 = s.intersect(r1);
-    std::array<double,2> res2 = s.intersect(r2);
-    std::array<double,2> res3 = s.intersect(r3);
-    std::array<double,2> res4 = s.intersect(r4);
-    std::array<double,2> res5 = s.intersect(r5);
+    auto res1 = s.intersect(r1);
+    auto res2 = s.intersect(r2);
+    auto res3 = s.intersect(r3);
+    auto res4 = s.intersect(r4);
+    auto res5 = s.intersect(r5);
 
-    REQUIRE(4.0==res1[0]);
-    REQUIRE(6.0==res1[1]);
-    REQUIRE(5.0==res2[0]);
-    REQUIRE(5.0==res2[1]);
-    REQUIRE(std::numeric_limits<double>::infinity()==res3[0]);
-    REQUIRE(std::numeric_limits<double>::infinity()==res3[1]);
-    REQUIRE(-1.0==res4[0]);
-    REQUIRE(1.0==res4[1]);
-    REQUIRE(-6.0==res5[0]);
-    REQUIRE(-4.0==res5[1]);
+    REQUIRE(4.0==res1[0].t);
+    REQUIRE(6.0==res1[1].t);
+    REQUIRE(5.0==res2[0].t);
+    REQUIRE(5.0==res2[1].t);
+    REQUIRE(0==res3.count);
+    REQUIRE(0==res3.count);
+    REQUIRE(-1.0==res4[0].t);
+    REQUIRE(1.0==res4[1].t);
+    REQUIRE(-6.0==res5[0].t);
+    REQUIRE(-4.0==res5[1].t);
 }
 
 TEST_CASE("Variadic length Intersections class can be initialized and accessed","[Variadic Intersections class]"){
-    
+    Sphere* s = new Sphere();
+    auto i1 = Intersection(1,s);
+    auto i2 = Intersection(2,s);
+    std::vector<Intersection> arr;
+    arr.push_back(i1);
+    arr.push_back(i2);
+    auto xs = Intersections(arr);
+    REQUIRE(xs.count == 2);
+    REQUIRE(xs[0].t == 1);
+    REQUIRE(xs[1].t == 2);
 }
 
 /*

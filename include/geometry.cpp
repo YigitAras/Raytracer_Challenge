@@ -429,15 +429,15 @@ Tuple Ray::pos(double t){
     return this->origin + t * this->direction;
 }
 
-std::array<double,2> Obj3D::intersect(Ray ray){
-    std::array<double,2> res = { { std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity()} };  // weird init for std::array
+Intersections Obj3D::intersect(Ray ray){
+    std::vector<Intersection> a;
+    auto res = Intersections(a);  // weird init for std::array
     // for now nothing, will implement later a generalized way
     return res;
 }
 
-std::array<double,2> Sphere::intersect(Ray ray){
-    
-    std::array<double,2> res = { { std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity()} };  // weird init for std::array
+Intersections Sphere::intersect(Ray ray){
+    std::vector<Intersection> res;
 
     Tuple sphere_to_ray =  ray.get_origin() - Tuple::point(0,0,0);
     double a = ray.get_direction().dot(ray.get_direction());
@@ -448,8 +448,8 @@ std::array<double,2> Sphere::intersect(Ray ray){
     // if discrim smaller than 0 no intersection hence two infinities are returned
     if ( discrim < 0 ) return res;
 
-    res[0] = (-b - sqrt(discrim)) / (2*a);
-    res[1] = (-b + sqrt(discrim)) / (2*a);
+    res.push_back(Intersection((-b - sqrt(discrim)) / (2*a),this));
+    res.push_back(Intersection((-b + sqrt(discrim)) / (2*a),this));
 
     return res;
 }
@@ -460,10 +460,18 @@ Tuple Sphere::get_origin(){
 Tuple Obj3D::get_origin(){
     return this->origin;
 }
+Intersection::Intersection(double t,Obj3D* obj){
+    this->t=t;
+    this->object = obj;
+}
 
 Intersection& Intersections::operator[](int ind){
     return this->arr[ind];
 }
 
+Intersections::Intersections(std::vector<Intersection> l){
+        this->arr = l;
+        this->count = l.size();
+    }
 
 
