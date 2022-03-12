@@ -472,6 +472,18 @@ Intersection& Intersections::operator[](int ind){
 Intersections::Intersections(std::vector<Intersection> l){
         this->arr = l;
         this->count = l.size();
+}
+
+Intersection Intersections::hit(){
+    std::sort(this->arr.begin(),this->arr.end(),
+        [](const Intersection &a, const Intersection &b){
+            return a.t < b.t;
+        });
+    Intersection res;
+    for(auto a: this->arr){
+        if(a.t > 0) { res = a; break;}
     }
+    return res;
+}
 
 

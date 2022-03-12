@@ -537,6 +537,31 @@ TEST_CASE("Variadic length Intersections class can be initialized and accessed",
     REQUIRE(xs[1].t == 2);
 }
 
+TEST_CASE("Hits can be returned from Intersections","[Hits from intersections]"){
+    Sphere* s = new Sphere();
+    auto i1 = Intersection(1,s);
+    auto i2 = Intersection(2,s);
+    std::vector<Intersection> arr;
+    arr.push_back(i1);
+    arr.push_back(i2);
+    auto xs = Intersections(arr);
+    auto i_res = xs.hit();
+    // This should work
+    REQUIRE((i_res==i1));
+
+    auto i3 = Intersection(-1,s);
+    auto i4 = Intersection(1,s);
+    std::vector<Intersection> arr2;
+    arr2.push_back(i3);
+    arr2.push_back(i4);
+    auto xs2 = Intersections(arr2);
+    auto i_res2 = xs2.hit();
+    REQUIRE((i_res2==i4));
+
+    // TODO: Make hit() return an optional type
+
+}
+
 /*
 
 SCENARIO( "vectors can be sized and resized", "[vector]" ) {

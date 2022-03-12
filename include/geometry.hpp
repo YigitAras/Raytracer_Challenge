@@ -133,8 +133,13 @@ class Intersection {
     Obj3D* object;
     double t;
     Intersection(double,Obj3D*);
+    Intersection():t(0),object(nullptr){}
+    //HACK: Possible memory error here for early deletes 
     ~Intersection(){
         delete object;
+    }
+    bool operator==(Intersection& rhs) const{
+        return this->t==rhs.t && this->object == rhs.object;
     }
 };
 
@@ -144,6 +149,13 @@ class Intersections {
     size_t count;
     Intersection& operator[](int ind);
     Intersections(std::vector<Intersection> l);
+    void print_els(){
+        for(auto el: arr){
+            std::cout<< el.t << " ";
+        }
+        std::cout << "\n";
+    }
+    Intersection hit();
 };
 
 class Sphere : public Obj3D {
