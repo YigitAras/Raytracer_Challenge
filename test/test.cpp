@@ -557,7 +557,6 @@ TEST_CASE("Hits can be returned from Intersections","[Hits from intersections]")
     auto [i_res2, c2] = xs2.hit();
     REQUIRE((i_res2==i4));
 
-    // TODO: Make hit() return an optional type
     auto i5 = Intersection(-1,s);
     auto i6 = Intersection(-2,s);
     std::vector<Intersection> arr3;
@@ -586,6 +585,36 @@ TEST_CASE("Hits return correct even with unordered inputs","[Hits unordered corr
     REQUIRE(c==true);
     REQUIRE((i_res==i4));
 
+}
+
+TEST_CASE("Transforms can be applied to rays","[Rays Transformations]"){
+    auto r1 = Ray(Tuple::point(1,2,3),Tuple::vector(0,1,0));
+    auto m1  = Matrixf::translation(3,4,5);
+    auto res1 = r1.transformed(m1);
+    auto res_ori1 = Tuple::point(4,6,8);
+    auto res_dir1 = Tuple::vector(0,1,0);
+    // no idea why not
+
+    REQUIRE((res1.get_direction() == res_dir1));
+    REQUIRE((res1.get_origin() == res_ori1));
+
+    auto r2 = Ray(Tuple::point(1,2,3),Tuple::vector(0,1,0));
+    auto m2 = Matrixf::scaling(2,3,4);
+    auto res2 = r2.transformed(m2);
+    auto res_ori2 = Tuple::point(2,6,12);
+    auto res_dir2 =  Tuple::vector(0,3,0);
+
+    REQUIRE((res2.get_direction() == res_dir2));
+    REQUIRE((res2.get_origin() == res_ori2));
+}
+
+TEST_CASE("Ray intersection works with transformed objects","[Ray Transformed Intersection]"){
+    auto r1 = Ray(Tuple::point(0,0,-5),Tuple::vector(0,0,1));
+    auto s = new Sphere();
+    auto m = Matrixf::translation(5,0,0);
+    s->set_transform(m);
+    auto xs = s->intersect(r1);
+    REQUIRE(xs.count == 0);
 }
 
 /*

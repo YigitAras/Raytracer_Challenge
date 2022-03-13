@@ -429,6 +429,19 @@ Tuple Ray::pos(double t){
     return this->origin + t * this->direction;
 }
 
+void Ray::transform(Matrixf m){
+    this->origin = m*this->origin;
+    this->direction = m*this->direction;
+}
+
+Ray Ray::transformed(Matrixf m){
+    Tuple ori = m*this->origin;
+    Tuple dir = m*this->direction;
+    return Ray(ori,dir);
+}
+
+// OBJECTS 3D STUFF BELOW
+
 Intersections Obj3D::intersect(Ray ray){
     std::vector<Intersection> a;
     auto res = Intersections(a);  // weird init for std::array
@@ -436,9 +449,14 @@ Intersections Obj3D::intersect(Ray ray){
     return res;
 }
 
+Matrixf Sphere::get_transform(){
+    return this->pos;
+}
+
 Intersections Sphere::intersect(Ray ray){
     std::vector<Intersection> res;
-
+    auto m = this->get_transform().inv();
+    ray = ray.transformed(m);
     Tuple sphere_to_ray =  ray.get_origin() - Tuple::point(0,0,0);
     double a = ray.get_direction().dot(ray.get_direction());
     double b = 2 * ray.get_direction().dot(sphere_to_ray);
@@ -446,20 +464,16 @@ Intersections Sphere::intersect(Ray ray){
     double discrim = b*b - 4 * a * c;
     
     // if discrim smaller than 0 no intersection hence two infinities are returned
-    if ( discrim < 0 ) return res;
+    if ( discrim < 0 ) return Intersections(res);
 
     res.push_back(Intersection((-b - sqrt(discrim)) / (2*a),this));
     res.push_back(Intersection((-b + sqrt(discrim)) / (2*a),this));
 
-    return res;
+    return Intersections(res);
 }
 
-Tuple Sphere::get_origin(){
-    return this->origin;
-}
-Tuple Obj3D::get_origin(){
-    return this->origin;
-}
+// INTERSECTION RELATED STUFF BELOW
+
 Intersection::Intersection(double t,Obj3D* obj){
     this->t=t;
     this->object = obj;
@@ -485,5 +499,7 @@ std::pair<Intersection,bool> Intersections::hit(){
     }
     return std::make_pair(res,false);
 }
+
+
 
 

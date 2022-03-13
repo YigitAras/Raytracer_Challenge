@@ -119,13 +119,13 @@ class Ray{
     Tuple get_origin();
     Tuple get_direction();
     Tuple pos(double);
+    void transform(Matrixf m);
+    Ray transformed(Matrixf m);
 };
 
 class Obj3D {
     public:
-    Tuple origin = Tuple::vector(0,0,0);
     Intersections intersect(Ray ray);
-    virtual Tuple get_origin();
 };
 
 class Intersection {
@@ -161,10 +161,12 @@ class Intersections {
 class Sphere : public Obj3D {
     private:
     double r=1; // for now initialize it as unit sphere
+    Matrixf pos = Matrixf::ident(4);
 
     public:
     Intersections intersect(Ray ray);
-    Tuple get_origin();
+    Matrixf get_transform();
+    void set_transform(Matrixf m) { this->pos = m;}
 
 };
 
