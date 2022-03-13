@@ -474,16 +474,16 @@ Intersections::Intersections(std::vector<Intersection> l){
         this->count = l.size();
 }
 
-Intersection Intersections::hit(){
+std::pair<Intersection,bool> Intersections::hit(){
     std::sort(this->arr.begin(),this->arr.end(),
         [](const Intersection &a, const Intersection &b){
             return a.t < b.t;
         });
     Intersection res;
     for(auto a: this->arr){
-        if(a.t > 0) { res = a; break;}
+        if(a.t > 0) { return std::make_pair(a,true);}
     }
-    return res;
+    return std::make_pair(res,false);
 }
 
 

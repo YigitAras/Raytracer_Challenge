@@ -5,7 +5,6 @@
 
 
 
-
 TEST_CASE( "Tuple elements can be accessed", "[Tuple]" ) {
     Tuple ex_tuple = Tuple(4.3,-4.2,3.1,1.0);
     REQUIRE(double_cmp(ex_tuple.x,4.3) == true);
@@ -545,7 +544,7 @@ TEST_CASE("Hits can be returned from Intersections","[Hits from intersections]")
     arr.push_back(i1);
     arr.push_back(i2);
     auto xs = Intersections(arr);
-    auto i_res = xs.hit();
+    auto [i_res, c1] = xs.hit();
     // This should work
     REQUIRE((i_res==i1));
 
@@ -555,10 +554,37 @@ TEST_CASE("Hits can be returned from Intersections","[Hits from intersections]")
     arr2.push_back(i3);
     arr2.push_back(i4);
     auto xs2 = Intersections(arr2);
-    auto i_res2 = xs2.hit();
+    auto [i_res2, c2] = xs2.hit();
     REQUIRE((i_res2==i4));
 
     // TODO: Make hit() return an optional type
+    auto i5 = Intersection(-1,s);
+    auto i6 = Intersection(-2,s);
+    std::vector<Intersection> arr3;
+    arr3.push_back(i5);
+    arr3.push_back(i6);
+    auto xs3 = Intersections(arr3);
+    auto [i_res3, c3] = xs3.hit();
+ 
+    REQUIRE(c3==false);
+
+}
+
+TEST_CASE("Hits return correct even with unordered inputs","[Hits unordered correct]"){
+    Sphere* s = new Sphere();
+    auto i1 = Intersection(5,s);
+    auto i2 = Intersection(7,s);
+    auto i3 = Intersection(-3,s);
+    auto i4 = Intersection(2,s);
+    std::vector<Intersection> arr;
+    arr.push_back(i1);
+    arr.push_back(i2);
+    arr.push_back(i3);
+    arr.push_back(i4);
+    auto xs = Intersections(arr);
+    auto [i_res,c] = xs.hit();
+    REQUIRE(c==true);
+    REQUIRE((i_res==i4));
 
 }
 

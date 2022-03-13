@@ -9,7 +9,7 @@
 #define M_PI 3.14159265358979323846
 #include <limits>
 #include <vector>
-#include <initializer_list>
+
 
 // forward decleration?
 class Obj3D;
@@ -155,7 +155,7 @@ class Intersections {
         }
         std::cout << "\n";
     }
-    Intersection hit();
+    std::pair<Intersection,bool> hit();
 };
 
 class Sphere : public Obj3D {
