@@ -148,7 +148,7 @@ class Intersections {
     std::vector<Intersection> arr;
     size_t count;
     Intersection& operator[](int ind);
-    Intersections(std::vector<Intersection> l);
+    explicit Intersections(std::vector<Intersection> l);
     void print_els(){
         for(auto el: arr){
             std::cout<< el.t << " ";

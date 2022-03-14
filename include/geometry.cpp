@@ -463,7 +463,7 @@ Intersections Sphere::intersect(Ray ray){
     double c = sphere_to_ray.dot(sphere_to_ray) - 1;
     double discrim = b*b - 4 * a * c;
     
-    // if discrim smaller than 0 no intersection hence two infinities are returned
+    // if discrim smaller than 0 no intersection is returned
     if ( discrim < 0 ) return Intersections(res);
 
     res.push_back(Intersection((-b - sqrt(discrim)) / (2*a),this));
