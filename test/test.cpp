@@ -617,6 +617,42 @@ TEST_CASE("Ray intersection works with transformed objects","[Ray Transformed In
     REQUIRE(xs.count == 0);
 }
 
+TEST_CASE("Normal on a point of a sphere can be constructred","[Normal on Sphere]"){
+    auto s = Sphere();
+    auto n1 = s.normal_at(Tuple::point(1,0,0));
+    auto na1 = Tuple::vector(1,0,0);
+    REQUIRE((n1==na1));
+
+    auto n2 = s.normal_at(Tuple::point(0,1,0));
+    auto na2 = Tuple::vector(0,1,0);
+    REQUIRE((n2==na2));
+
+    auto n3 = s.normal_at(Tuple::point(0,0,1));
+    auto na3 = Tuple::vector(0,0,1);
+    REQUIRE((n3==na3));
+
+    auto n4 =  s.normal_at(Tuple::point(sqrt(3)/3, sqrt(3)/3, sqrt(3)/3));
+    auto na4 = Tuple::vector(sqrt(3)/3, sqrt(3)/3, sqrt(3)/3);
+    REQUIRE((na4==n4));
+    REQUIRE((na4==n4.normalize()));
+
+    auto s2 = Sphere();
+    s2.set_transform(Matrixf::translation(0,1,0));
+    auto n5 = s2.normal_at(Tuple::point(0, 1.70711, -0.70711));
+    auto na5 = Tuple::vector(0, 0.70711, -0.70711);
+
+    REQUIRE((na5==n5));
+
+    auto s3 = Sphere();
+    auto m = Matrixf::ident(4).rotate_z(M_PI/5).scale(1,0.5,1); 
+    s3.set_transform(m);
+    auto n6 = s3.normal_at(Tuple::point(0,sqrt(2)/2,-sqrt(2)/2));
+    auto na6 = Tuple::vector(0,0.97014,-0.24254);
+
+    REQUIRE((n6==na6));
+}
+
+
 /*
 
 SCENARIO( "vectors can be sized and resized", "[vector]" ) {

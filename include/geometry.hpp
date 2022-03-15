@@ -167,6 +167,7 @@ class Sphere : public Obj3D {
     Intersections intersect(Ray ray);
     Matrixf get_transform();
     void set_transform(Matrixf m) { this->pos = m;}
+    Tuple normal_at(Tuple);
 
 };
 

@@ -472,6 +472,22 @@ Intersections Sphere::intersect(Ray ray){
     return Intersections(res);
 }
 
+Tuple Sphere::normal_at(Tuple p){
+    // from WORLD_POINT to OBJECT_POINT
+    // Normal needs to be transformed as well
+    // n^T * P = 0 
+    // (Qn)^T * MP = 0    Since point P is transformed, the normal has to as well and equality has to preserved
+    // n^T * Q^T*M * p = 0
+    // Q^T * M = I
+    // Q = (M^-1)^T
+    auto m = this->get_transform().inv();
+    auto obj_pt = m * p;
+    auto obj_n = obj_pt - Tuple::point(0,0,0);
+    auto m_INVT = this->get_transform().inv().transpose();
+    auto world_n = m_INVT * obj_n;
+    world_n.w = 0; // little hack to offset possible translation build up on w
+    return world_n.normalize();
+}
 // INTERSECTION RELATED STUFF BELOW
 
 Intersection::Intersection(double t,Obj3D* obj){
