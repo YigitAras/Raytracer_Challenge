@@ -652,6 +652,22 @@ TEST_CASE("Normal on a point of a sphere can be constructred","[Normal on Sphere
     REQUIRE((n6==na6));
 }
 
+TEST_CASE("Reflecting vectors works","[Reflect vector]"){
+    auto v1 = Tuple::vector(1,-1,0);
+    auto n1 = Tuple::vector(0,1,0);
+    auto r1 = Ray::reflect(v1,n1);
+    auto res1 = Tuple::vector(1,1,0);
+
+    REQUIRE((r1==res1));
+
+    auto v2 = Tuple::vector(0,-1,0);
+    auto n2 = Tuple::vector(sqrt(2)/2,sqrt(2)/2,0);
+    auto r2 = Ray::reflect(v2,n2);
+    auto res2 = Tuple::vector(1,0,0);
+
+    REQUIRE((r2==res2));
+}
+
 
 /*
 

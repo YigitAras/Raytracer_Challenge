@@ -440,6 +440,10 @@ Ray Ray::transformed(Matrixf m){
     return Ray(ori,dir);
 }
 
+Tuple Ray::reflect(Tuple in ,Tuple normal){
+    return in - normal * 2 * in.dot(normal);
+}
+
 // OBJECTS 3D STUFF BELOW
 
 Intersections Obj3D::intersect(Ray ray){

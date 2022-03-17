@@ -121,6 +121,7 @@ class Ray{
     Tuple pos(double);
     void transform(Matrixf m);
     Ray transformed(Matrixf m);
+    static Tuple reflect(Tuple,Tuple);
 };
 
 class Obj3D {
