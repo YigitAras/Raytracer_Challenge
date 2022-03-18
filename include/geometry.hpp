@@ -124,10 +124,32 @@ class Ray{
     static Tuple reflect(Tuple,Tuple);
 };
 
+class Material{
+    public:
+        Tuple color;
+        double ambient;
+        double diffuse;
+        double specular;
+        double shininess;
+        // default initialization
+        Material(): color(Tuple::color(1,1,1)),diffuse(0.9),specular(0.9),shininess(200.0), ambient(0.1){}
+        bool operator==(Material& rhs) const{
+            return this->color == rhs.color &&
+                   double_cmp(this->ambient, rhs.ambient) &&
+                   double_cmp(this->specular, rhs.specular) &&
+                   double_cmp(this->ambient, rhs.ambient) &&
+                   double_cmp(this->diffuse, rhs.diffuse) &&
+                   double_cmp(this->shininess, rhs.shininess);
+        }
+};
+
 class Obj3D {
     public:
     Intersections intersect(Ray ray);
+    // HACK: Why adding here "Material m;" breaks the code?
 };
+
+
 
 class Intersection {
     public:
@@ -140,7 +162,7 @@ class Intersection {
         delete object;
     }
     bool operator==(Intersection& rhs) const{
-        return this->t==rhs.t && this->object == rhs.object;
+        return this->t == rhs.t && this->object == rhs.object;
     }
 };
 
@@ -169,9 +191,19 @@ class Sphere : public Obj3D {
     Matrixf get_transform();
     void set_transform(Matrixf m) { this->pos = m;}
     Tuple normal_at(Tuple);
+    Material m = Material();
 
 };
 
+class PointLight {
+    private:
+        Tuple intensity;
+        Tuple position;
+    public:
+        PointLight(Tuple i,Tuple p) : intensity(i),position(p){}
+        Tuple get_intensity() {return this->intensity;}
+        Tuple get_position()  {return this->position;}
+};
 
 
 

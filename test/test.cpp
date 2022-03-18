@@ -21,23 +21,18 @@ TEST_CASE( "Point has w=1, Vector has w=0", "[Vector and Point]" ) {
     REQUIRE(ex_point1 == ex_tuple1);
     REQUIRE(ex_point2 == ex_tuple2);
 }
-
-
 TEST_CASE( "Adding two tuples results in another tuple", "[TUPLE+TUPLE=TUPLE]" ) {
     Tuple t1 = Tuple(3,-2,5,1);
     Tuple t2 = Tuple(-2,3,1,0);
     Tuple res_sum = Tuple(1,1,6,1);
     REQUIRE(res_sum == t1+t2);
 }
-
 TEST_CASE("Subtracting a point from another point yields a vector", "[Point-Point = Vec]"){
     Tuple p1 = Tuple::point(3,2,1);
     Tuple p2 = Tuple::point(5,6,7);
     Tuple res_sub = Tuple::vector(-2,-4,-6);
     REQUIRE(res_sub == p1-p2);
 }
-
-
 TEST_CASE("Subtracting a vector from a point yields another point", "[Point-VEC=Point]") {
     Tuple p1 = Tuple::point(3,2,1);
     Tuple p2 = Tuple::vector(5,6,7);
@@ -50,13 +45,11 @@ TEST_CASE("Subtracting a vector from another vector yields another vector", "[VE
     Tuple res_sub = Tuple::vector(-2,-4,-6);
     REQUIRE(res_sub == p1-p2);
 }
-
 TEST_CASE("Negating a vector is just its negative", "[minus VEC = VEC * -1]") {
     Tuple p1 = Tuple(1,-2,3,-4);
     Tuple res_neg = Tuple(-1,2,-3,4);
     REQUIRE(res_neg == -p1);
 }
-
 TEST_CASE("Scalar multiplication of a tuple", "[Tuple*scalar]"){
     Tuple p1 = Tuple(1,-2,3,-4);
     Tuple res = Tuple(3.5,-7,10.5,-14);    
@@ -64,7 +57,6 @@ TEST_CASE("Scalar multiplication of a tuple", "[Tuple*scalar]"){
     REQUIRE(res ==  p1 * 3.5);
     REQUIRE(res2 == p1 *0.5);
 }
-
 TEST_CASE("Scalar divison of a tuple", "[Tuple/scalar]"){
     Tuple p1 = Tuple(1,-2,3,-4);
        
@@ -72,7 +64,6 @@ TEST_CASE("Scalar divison of a tuple", "[Tuple/scalar]"){
     REQUIRE(res ==  p1 / 2);
     
 }
-
 TEST_CASE("Norm of one vector is it's magnitude", "[Norm of a vector]"){
     Tuple v1 = Tuple::vector(1,0,0);
     Tuple v2 = Tuple::vector(0,1,0);
@@ -87,7 +78,6 @@ TEST_CASE("Norm of one vector is it's magnitude", "[Norm of a vector]"){
     Tuple v5 = Tuple::vector(-1,-2,-3);
     REQUIRE(sqrt(14) == v5.norm());
 }
-
 TEST_CASE("A normalized vector should have magnitude 1", "[Norm(vec) == 1 if normalized]"){
     Tuple v1 = Tuple::vector(4,0,0);
     Tuple v2 = Tuple::vector(1,2,3);
@@ -97,14 +87,12 @@ TEST_CASE("A normalized vector should have magnitude 1", "[Norm(vec) == 1 if nor
     REQUIRE(v1.normalize() == res1);
     REQUIRE(v2.normalize() == res2);
 }
-
 TEST_CASE("Dot product between two vectors/tuples", "[Vec1 dot Vec2]"){
     Tuple v1 = Tuple::vector(1,2,3);
     Tuple v2 = Tuple::vector(2,3,4);
 
     REQUIRE(v1.dot(v2) == 20);
 }
-
 TEST_CASE("Cross product of two vectors is another that is orthogonal to both", "[Vec1 cross Vec2]"){
     Tuple v1 = Tuple::vector(1,2,3);
     Tuple v2 = Tuple::vector(2,3,4);
@@ -115,7 +103,6 @@ TEST_CASE("Cross product of two vectors is another that is orthogonal to both", 
     REQUIRE(res1 == v1.cross(v2));
     REQUIRE(res2 == v2.cross(v1));
 }
-
 TEST_CASE("Can use Tuple for color operations", "[Color operations]"){
     Tuple c1 = Tuple::color(0.9, 0.6, 0.75);
     Tuple c2 = Tuple::color(0.7, 0.1, 0.25);
@@ -135,7 +122,6 @@ TEST_CASE("Can use Tuple for color operations", "[Color operations]"){
     REQUIRE(res4 == c4*c5);
 
 }
-
 TEST_CASE("Canvas is initialized with color(0,0,0) for all elements", "[Canvas init]"){
     Canvas img = Canvas(10,20);
 
@@ -145,7 +131,6 @@ TEST_CASE("Canvas is initialized with color(0,0,0) for all elements", "[Canvas i
         }
     }
 }
-
 TEST_CASE("Can update a value in IMG with indexing", "[IMG indexing]"){
     Canvas img = Canvas(10,20);
     Tuple c1 = Tuple::color(1,0,0);
@@ -153,7 +138,6 @@ TEST_CASE("Can update a value in IMG with indexing", "[IMG indexing]"){
     img[2][3] = c1;
     REQUIRE(img[2][3] == Tuple(1,0,0,0));
 }
-
 TEST_CASE("Writing to PPM file works for header part", "[PPM format write]"){
     Canvas img = Canvas(5,3);
     img.dummy_to_ppm("out1.txt");
@@ -169,7 +153,6 @@ TEST_CASE("Writing to PPM file works for header part", "[PPM format write]"){
 
     REQUIRE(b1.str() == b2.str());
 }
-
 TEST_CASE("Full write test for PPM files work", "[PPM write full]"){
     Canvas img = Canvas(5,3);
     Tuple c1 = Tuple::color(1.5,0,0);
@@ -195,7 +178,6 @@ TEST_CASE("Full write test for PPM files work", "[PPM write full]"){
     REQUIRE(b1.str() == b2.str());
     
 }
-
 TEST_CASE("Full write test for PPM files work, also with line endings", "[PPM write full with line end]"){
     Canvas img = Canvas(10,2);
     for(int i = 0; i< img.get_height(); i++){
@@ -217,7 +199,6 @@ TEST_CASE("Full write test for PPM files work, also with line endings", "[PPM wr
     std::cout << b2.str() << std::endl;
     REQUIRE(b1.str() == b2.str());
 }
-
 TEST_CASE("Matrix can be initialized properly", "[Matrix initialization]"){
     double mat[4][4] = {{1.0,2.0,3.0,4.0},{5.5,6.5,7.5,8.5},{9.0,10.0,11.0,12.0},{13.5,14.5,15.5,16.5}};
     Matrixf m1 = Matrixf(mat);
@@ -230,7 +211,6 @@ TEST_CASE("Matrix can be initialized properly", "[Matrix initialization]"){
     REQUIRE(m1[3][0] == 13.5);
     REQUIRE(m1[3][2] == 15.5);
 }
-
 TEST_CASE("Can check equality of two matrices", "[Matrix equality]"){
     double m4[4][4] = {{-3,5,0,1},{1,-2,-7,2},{0,1,1,3},{1,2,3,4}};
     double m5[4][4] = {{-3,5,0,1},{1,-2,-3,3},{0,2,2,3},{1,2,3,4}};
@@ -240,7 +220,6 @@ TEST_CASE("Can check equality of two matrices", "[Matrix equality]"){
     REQUIRE((mat1 == mat2));
     REQUIRE(!(mat3 == mat2));
 }
-
 TEST_CASE("Matrix multiplication works", "[Matrix multiplication]"){
     double m4[4][4] = {{1,2,3,4},{5,6,7,8},{9,8,7,6},{5,4,3,2}};
     double m5[4][4] = {{-2,1,2,3},{3,2,1,-1},{4,3,6,5},{1,2,7,8}};
@@ -252,7 +231,6 @@ TEST_CASE("Matrix multiplication works", "[Matrix multiplication]"){
     Matrixf matmul = mat4*mat5;
     REQUIRE((matmul==matres)); 
 }
-
 TEST_CASE("Matrix-Tuple multiplication works", "[Matrix*Tuple]"){
     double m1[4][4] = {{1,2,3,4},{2,4,4,2},{8,6,4,1},{0,0,0,1}};
     Matrixf mat1(m1);
@@ -261,7 +239,6 @@ TEST_CASE("Matrix-Tuple multiplication works", "[Matrix*Tuple]"){
     Tuple resmul = mat1*b;
     REQUIRE((res == resmul));
 }
-
 TEST_CASE("Identity matrix can be initialized", "[Identity matrix]"){
     Matrixf identity = Matrixf::ident(4);
     double res[4][4] = {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}};
@@ -275,7 +252,6 @@ TEST_CASE("Identity matrix can be initialized", "[Identity matrix]"){
     REQUIRE((mat4 == resmul));
     REQUIRE((resmul2 == mat4));
 }
-
 TEST_CASE("Matrix transpose works", "[Matrix transpose]"){
     double m1[4][4] = {{0,9,3,0},{9,8,0,8},{1,8,5,3},{0,0,5,8}};
     Matrixf mat1(m1);
@@ -288,7 +264,6 @@ TEST_CASE("Matrix transpose works", "[Matrix transpose]"){
     REQUIRE((res==matt));
     REQUIRE((id_t == id));
 }
-
 TEST_CASE("4x4 Determinant works", "[Determinat 4x4]"){
     double m1[4][4] ={{-2,-8,3,5},{-3,1,7,3},{1,2,-9,6},{-6,7,7,-9}};
     Matrixf mat1(m1);
@@ -300,7 +275,6 @@ TEST_CASE("4x4 Determinant works", "[Determinat 4x4]"){
     REQUIRE(res==-4071);
     REQUIRE(res2==1);
 }
-
 TEST_CASE("Can tell if matrix is invertible", "[Invertibility of Matrix]"){
     double m1[4][4] ={{6,4,4,4},{5,5,7,6},{4,-9,3,-7},{9,1,7,-6}};
     double m2[4][4] ={{-4,2,-2,-3},{9,6,2,6},{0,-5,1,-5},{0,0,0,0}};
@@ -333,7 +307,6 @@ TEST_CASE("Can invert a 4x4 matrix correctly", "[4x4 Matrix Inversion]"){
     Matrixf matinv3 = mat3.inv();
     REQUIRE((matinv3 == matres3));
 }
-
 TEST_CASE("A*B=C ==> A = C*B_inv","[Multiply by inverse]"){
     double a[4][4] = {{3 , -9 , 7 , 3},{3 , -8 , 2 , -9},{-4 , 4 , 4 , 1},{-6 , 5 , -1 , 1}};
     double b[4][4] = {{8 , 2 , 2 , 2},{3 , -1 , 7 , 0},{7 , 0 , 5 , 4},{6 , -2 , 0 , 5}};
@@ -346,7 +319,6 @@ TEST_CASE("A*B=C ==> A = C*B_inv","[Multiply by inverse]"){
 
     REQUIRE((A==res));
 }
-
 TEST_CASE("Translation matrix works as intended", "[Translation matrix]"){
     Matrixf transform = Matrixf::translation(5,-3,2);
     Tuple ptr = Tuple::point(-3,4,5);
@@ -362,7 +334,6 @@ TEST_CASE("Translation matrix works as intended", "[Translation matrix]"){
     Tuple vecres = transform * vec;
     REQUIRE((vec == vecres));
 }
-
 TEST_CASE("Scaling matrix works as intended", "[Scaling matrix]"){
     Matrixf transform = Matrixf::scaling(2,3,4);
     Tuple ptr = Tuple::point(-4,6,8);
@@ -387,7 +358,6 @@ TEST_CASE("Scaling matrix works as intended", "[Scaling matrix]"){
     REQUIRE((ressca3 == res3));
     REQUIRE((ressca4 == res4));
 }
-
 TEST_CASE("Rotation around X works (Left Handed)", "[Rotate X]"){
     Tuple pt = Tuple::point(0,1,0);
     Matrixf half_q = Matrixf::rotation_x(M_PI/4);
@@ -396,7 +366,6 @@ TEST_CASE("Rotation around X works (Left Handed)", "[Rotate X]"){
     Tuple matres = inv_half_q * pt;
     REQUIRE((matres==res)); 
 }
-
 TEST_CASE("Rotation around Y works (Left Handed)", "[Rotate Y]"){
     Tuple pt = Tuple::point(0,0,1);
     Matrixf half_q = Matrixf::rotation_y(M_PI/4);
@@ -409,8 +378,6 @@ TEST_CASE("Rotation around Y works (Left Handed)", "[Rotate Y]"){
     REQUIRE((matres2==pt2));
     
 }
-
-
 TEST_CASE("Rotation around Z works (Left Handed)", "[Rotate Z]"){
     Tuple pt = Tuple::point(0,1,0);
     Matrixf half_q = Matrixf::rotation_z(M_PI/4);
@@ -423,7 +390,6 @@ TEST_CASE("Rotation around Z works (Left Handed)", "[Rotate Z]"){
     REQUIRE((matres2==pt2));
     
 }
-
 TEST_CASE("Shear matrix works as intended", "[Shear matrix]") {
     Matrixf sh1 = Matrixf::shearing(0,1,0,0,0,0);
     Tuple pt1 = Tuple::point(2,3,4);
@@ -457,7 +423,6 @@ TEST_CASE("Shear matrix works as intended", "[Shear matrix]") {
     REQUIRE((res4 == matres4));
     REQUIRE((res5 == matres));
 }
-
 TEST_CASE("Transformation API calls working as intended", "[Fleunt API]"){
     Matrixf transform = Matrixf::ident(4).
                         rotate_x(M_PI/2).
@@ -469,7 +434,6 @@ TEST_CASE("Transformation API calls working as intended", "[Fleunt API]"){
     Tuple mulres = transform*point;
     REQUIRE((mulres == res));
 }
-
 TEST_CASE("Can instantiate a Ray and its values are correct","[Ray Initialization]"){
     Tuple origin = Tuple::point(1,2,3);
     Tuple direction = Tuple::vector(4,5,6);
@@ -478,7 +442,6 @@ TEST_CASE("Can instantiate a Ray and its values are correct","[Ray Initializatio
     REQUIRE((r1.get_direction() == direction));
     REQUIRE((r1.get_origin() == origin));
 }
-
 TEST_CASE("Can query a position at time T from a Ray","[Ray Pos at T]"){
     Tuple origin = Tuple::point(2,3,4);
     Tuple direction = Tuple::vector(1,0,0);
@@ -494,7 +457,6 @@ TEST_CASE("Can query a position at time T from a Ray","[Ray Pos at T]"){
     REQUIRE((p4 == r1.pos(2.5)));
 
 }
-
 TEST_CASE("Intersection between a ray and a sphere works", "[Ray | Sphere]"){
     Ray r1 = Ray(Tuple::point(0,0,-5),Tuple::vector(0,0,1));
     Ray r2 = Ray(Tuple::point(0,1,-5),Tuple::vector(0,0,1));
@@ -522,7 +484,6 @@ TEST_CASE("Intersection between a ray and a sphere works", "[Ray | Sphere]"){
     REQUIRE(-6.0==res5[0].t);
     REQUIRE(-4.0==res5[1].t);
 }
-
 TEST_CASE("Variadic length Intersections class can be initialized and accessed","[Variadic Intersections class]"){
     Sphere* s = new Sphere();
     auto i1 = Intersection(1,s);
@@ -535,7 +496,6 @@ TEST_CASE("Variadic length Intersections class can be initialized and accessed",
     REQUIRE(xs[0].t == 1);
     REQUIRE(xs[1].t == 2);
 }
-
 TEST_CASE("Hits can be returned from Intersections","[Hits from intersections]"){
     Sphere* s = new Sphere();
     auto i1 = Intersection(1,s);
@@ -568,7 +528,6 @@ TEST_CASE("Hits can be returned from Intersections","[Hits from intersections]")
     REQUIRE(c3==false);
 
 }
-
 TEST_CASE("Hits return correct even with unordered inputs","[Hits unordered correct]"){
     Sphere* s = new Sphere();
     auto i1 = Intersection(5,s);
@@ -586,7 +545,6 @@ TEST_CASE("Hits return correct even with unordered inputs","[Hits unordered corr
     REQUIRE((i_res==i4));
 
 }
-
 TEST_CASE("Transforms can be applied to rays","[Rays Transformations]"){
     auto r1 = Ray(Tuple::point(1,2,3),Tuple::vector(0,1,0));
     auto m1  = Matrixf::translation(3,4,5);
@@ -607,7 +565,6 @@ TEST_CASE("Transforms can be applied to rays","[Rays Transformations]"){
     REQUIRE((res2.get_direction() == res_dir2));
     REQUIRE((res2.get_origin() == res_ori2));
 }
-
 TEST_CASE("Ray intersection works with transformed objects","[Ray Transformed Intersection]"){
     auto r1 = Ray(Tuple::point(0,0,-5),Tuple::vector(0,0,1));
     auto s = new Sphere();
@@ -616,7 +573,6 @@ TEST_CASE("Ray intersection works with transformed objects","[Ray Transformed In
     auto xs = s->intersect(r1);
     REQUIRE(xs.count == 0);
 }
-
 TEST_CASE("Normal on a point of a sphere can be constructred","[Normal on Sphere]"){
     auto s = Sphere();
     auto n1 = s.normal_at(Tuple::point(1,0,0));
@@ -651,7 +607,6 @@ TEST_CASE("Normal on a point of a sphere can be constructred","[Normal on Sphere
 
     REQUIRE((n6==na6));
 }
-
 TEST_CASE("Reflecting vectors works","[Reflect vector]"){
     auto v1 = Tuple::vector(1,-1,0);
     auto n1 = Tuple::vector(0,1,0);
@@ -666,6 +621,30 @@ TEST_CASE("Reflecting vectors works","[Reflect vector]"){
     auto res2 = Tuple::vector(1,0,0);
 
     REQUIRE((r2==res2));
+}
+TEST_CASE("Point Light source can be instantiated with proper members","[Point light source]"){
+    auto inten = Tuple::color(1,1,1);
+    auto pos = Tuple::point(0,0,0);
+    auto ptr_light = PointLight(inten,pos);
+
+    REQUIRE((inten == ptr_light.get_intensity()));
+    REQUIRE((pos == ptr_light.get_position()));
+}
+TEST_CASE("Material class and objects have materials","[Material and Shapes]"){
+    auto m = Material();
+    REQUIRE((m.ambient == 0.1));
+    REQUIRE((m.color == Tuple::color(1,1,1)));
+    REQUIRE((m.diffuse == 0.9));
+    REQUIRE((m.shininess == 200.0));
+    REQUIRE((m.specular == 0.9));
+    
+    auto s = Sphere();
+
+    REQUIRE((m == s.m));
+    // s
+    m.ambient = 1.0;
+    s.m = m;
+    REQUIRE((m == s.m));
 }
 
 
