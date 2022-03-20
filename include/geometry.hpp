@@ -150,7 +150,6 @@ class Obj3D {
 };
 
 
-
 class Intersection {
     public:
     Obj3D* object;
@@ -200,10 +199,13 @@ class PointLight {
         Tuple intensity;
         Tuple position;
     public:
-        PointLight(Tuple i,Tuple p) : intensity(i),position(p){}
+        PointLight(Tuple p,Tuple i) : intensity(i),position(p){}
         Tuple get_intensity() {return this->intensity;}
         Tuple get_position()  {return this->position;}
 };
+
+// HACK: Make the light more general
+Tuple lighting(Material,PointLight,Tuple pos, Tuple, Tuple);
 
 
 

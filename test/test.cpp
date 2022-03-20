@@ -625,7 +625,7 @@ TEST_CASE("Reflecting vectors works","[Reflect vector]"){
 TEST_CASE("Point Light source can be instantiated with proper members","[Point light source]"){
     auto inten = Tuple::color(1,1,1);
     auto pos = Tuple::point(0,0,0);
-    auto ptr_light = PointLight(inten,pos);
+    auto ptr_light = PointLight(pos,inten);
 
     REQUIRE((inten == ptr_light.get_intensity()));
     REQUIRE((pos == ptr_light.get_position()));
@@ -645,6 +645,60 @@ TEST_CASE("Material class and objects have materials","[Material and Shapes]"){
     m.ambient = 1.0;
     s.m = m;
     REQUIRE((m == s.m));
+}
+
+TEST_CASE("Lighting function works properly", "[Lighting function]"){
+    // Set material of object and its position
+    auto m = Material();
+    auto pos = Tuple::point(0,0,0);
+
+    auto eyev = Tuple::vector(0,0,-1);
+    auto normalv = Tuple::vector(0,0,-1);
+    auto pt_light = PointLight(Tuple::point(0,0,-10),Tuple::color(1,1,1));
+
+    auto res1 = lighting(m,pt_light,pos,eyev,normalv);
+    auto res_c1 = Tuple::color(1.9,1.9,1.9);
+    REQUIRE((res1==res_c1));
+
+    auto eyev2 = Tuple::vector(0,sqrt(2)/2,-sqrt(2)/2);
+    auto normalv2 = Tuple::vector(0,0,-1);
+    auto pt_light2 = PointLight(Tuple::point(0,0,-10),Tuple::color(1,1,1));
+
+    auto res2 = lighting(m,pt_light2,pos,eyev2,normalv2);
+    auto res_c2 = Tuple::color(1,1,1);
+
+    REQUIRE((res2==res_c2));
+
+
+    auto eyev3 = Tuple::vector(0,0,-1);
+    auto normalv3 = Tuple::vector(0,0,-1);
+    auto pt_light3 = PointLight(Tuple::point(0,10,-10),Tuple::color(1,1,1));
+
+    auto res3 = lighting(m,pt_light3,pos,eyev3,normalv3);
+    auto res_c3 = Tuple::color(0.7364, 0.7364, 0.7364);
+
+    REQUIRE((res3==res_c3));
+
+
+    auto eyev4 = Tuple::vector(0,-sqrt(2)/2,-sqrt(2)/2);
+    auto normalv4 = Tuple::vector(0,0,-1);
+    auto pt_light4 = PointLight(Tuple::point(0,10,-10),Tuple::color(1,1,1));
+
+    auto res4 = lighting(m,pt_light4,pos,eyev4,normalv4);
+    auto res_c4 = Tuple::color(1.6364, 1.6364, 1.6364);
+
+    REQUIRE((res4==res_c4));
+
+
+    auto eyev5 = Tuple::vector(0,0,-1);
+    auto normalv5 = Tuple::vector(0,0,-1);
+    auto pt_light5 = PointLight(Tuple::point(0,0,10),Tuple::color(1,1,1));
+
+    auto res5 = lighting(m,pt_light5,pos,eyev5,normalv5);
+    auto res_c5 = Tuple::color(0.1, 0.1, 0.1);
+
+    REQUIRE((res5==res_c5));
+
 }
 
 

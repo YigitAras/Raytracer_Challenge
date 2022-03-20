@@ -521,5 +521,35 @@ std::pair<Intersection,bool> Intersections::hit(){
 }
 
 
+Tuple lighting(Material m, PointLight pl, Tuple pos, Tuple eyev, Tuple normalv){
+    // combine surface color with the light's intensity/color
+    auto effective_color = m.color * pl.get_intensity();
 
+    // direction to the light source
+    auto light_v = (pl.get_position() - pos).normalize();
+
+    //ambient term
+    auto ambient = effective_color * m.ambient;
+    // cosine of the angle between lightv and normalv
+    // Negative means light is on the other side of the body
+    auto light_dot_normal = light_v.dot(normalv);
+    auto diffuse = Tuple::color(0,0,0);
+    auto specular = Tuple::color(0,0,0);
+    if (light_dot_normal >= 0){
+        // Diffuse term from Phong-Shading equation
+        diffuse = effective_color * m.diffuse * light_dot_normal;
+        // reflect_dot_eye represents the cosine of the angle between the
+        // reflection vector and the eye vector. A negative number means the
+        // light reflects away from the eye.
+        auto reflectv = Ray::reflect(-light_v,normalv);
+        auto reflect_dot_eye = reflectv.dot(eyev);
+        if (reflect_dot_eye > 0){
+            auto factor = pow(reflect_dot_eye,m.shininess);
+            // Specular term from Phong-Shading equation
+            specular = pl.get_intensity() * m.specular * factor;
+        }
+    }
+    // Complete Phong-Shading equation
+    return ambient+diffuse+specular;
+}
 
